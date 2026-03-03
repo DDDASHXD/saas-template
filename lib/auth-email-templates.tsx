@@ -6,6 +6,7 @@ import {
   Heading,
   Hr,
   Html,
+  Img,
   Preview,
   Section,
   Text,
@@ -43,6 +44,14 @@ const colors = {
 const fontFamily =
   '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", sans-serif'
 
+const baseUrl = siteConfig.url.replace(/\/$/, "")
+const configuredLogo = siteConfig.logo.full?.trim()
+const logoUrl = configuredLogo
+  ? /^(https?:)?\/\//.test(configuredLogo)
+    ? configuredLogo
+    : `${baseUrl}${configuredLogo.startsWith("/") ? "" : "/"}${configuredLogo}`
+  : null
+
 const shellStyles = {
   body: {
     backgroundColor: colors.background,
@@ -59,6 +68,14 @@ const shellStyles = {
     border: `1px solid ${colors.border}`,
     borderRadius: "14px",
     padding: "28px",
+  } satisfies CSSProperties,
+  logoWrap: {
+    margin: "0 0 12px",
+  } satisfies CSSProperties,
+  logo: {
+    display: "block",
+    maxWidth: "172px",
+    height: "auto",
   } satisfies CSSProperties,
   brand: {
     margin: "0 0 18px",
@@ -146,6 +163,11 @@ const AuthEmailShell = ({ previewText, children }: AuthEmailShellProps) => (
     <Body style={shellStyles.body}>
       <Container style={shellStyles.container}>
         <Section style={shellStyles.card}>
+          {logoUrl ? (
+            <Section style={shellStyles.logoWrap}>
+              <Img src={logoUrl} alt={`${siteConfig.name} logo`} width={172} style={shellStyles.logo} />
+            </Section>
+          ) : null}
           <Text style={shellStyles.brand}>{siteConfig.name}</Text>
           {children}
         </Section>
