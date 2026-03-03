@@ -7,6 +7,7 @@ import { createEmailConfirmationToken } from "@/lib/auth-tokens"
 import { isValidEmail, normalizeEmail } from "@/lib/auth-validation"
 import { isResendConfigured } from "@/lib/email"
 import { getDb } from "@/lib/mongodb"
+import { ensureUserHasOrganization } from "@/lib/organizations"
 
 export const POST = async (req: Request) => {
   try {
@@ -68,12 +69,21 @@ export const POST = async (req: Request) => {
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    await db.collection("users").insertOne({
+    const now = new Date()
+    const createdUser = await db.collection("users").insertOne({
       name: normalizedName,
       email: normalizedEmail,
       password: hashedPassword,
-      emailVerified: siteConfig.auth.requireEmailConfirmation ? null : new Date(),
-      createdAt: new Date(),
+      emailVerified: siteConfig.auth.requireEmailConfirmation ? null : now,
+      needsOnboarding: false,
+      createdAt: now,
+      updatedAt: now,
+    })
+
+    await ensureUserHasOrganization({
+      userId: createdUser.insertedId.toString(),
+      name: normalizedName,
+      email: normalizedEmail,
     })
 
     if (siteConfig.auth.requireEmailConfirmation) {

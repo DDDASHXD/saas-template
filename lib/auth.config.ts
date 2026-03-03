@@ -68,6 +68,7 @@ export default {
       }
       if (user) {
         token.needsOnboarding = user.needsOnboarding ?? false
+        token.currentOrganizationId = user.currentOrganizationId ?? null
       }
       if (trigger === "update") {
         token.needsOnboarding = false
@@ -80,6 +81,10 @@ export default {
       }
       if (session.user) {
         session.user.needsOnboarding = token.needsOnboarding ?? false
+        session.user.currentOrganizationId =
+          typeof token.currentOrganizationId === "string"
+            ? token.currentOrganizationId
+            : null
       }
       return session
     },
@@ -98,6 +103,8 @@ export default {
         "/resources",
         "/projects",
         "/pages",
+        "/permission-routes",
+        "/permissions-lab",
         "/docs",
       ]
       const authRoutes = ["/login", "/register", "/forgot-password", "/reset-password"]

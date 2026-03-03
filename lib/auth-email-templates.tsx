@@ -10,10 +10,10 @@ import {
   Preview,
   Section,
   Text,
-} from "@react-email/components"
-import type { CSSProperties, ReactNode } from "react"
+} from '@react-email/components'
+import type { CSSProperties, ReactNode } from 'react'
 
-import { siteConfig } from "@/config"
+import { siteConfig } from '@/config'
 
 interface AuthEmailShellProps {
   previewText: string
@@ -31,125 +31,126 @@ interface AuthActionEmailProps {
 }
 
 const colors = {
-  background: "#f4f4f5",
-  cardBackground: "#ffffff",
-  border: "#e4e4e7",
-  heading: "#09090b",
-  body: "#27272a",
-  muted: "#71717a",
-  button: "#18181b",
-  buttonText: "#fafafa",
+  background: '#f4f4f5',
+  cardBackground: '#ffffff',
+  border: '#e4e4e7',
+  heading: '#09090b',
+  body: '#27272a',
+  muted: '#71717a',
+  button: '#18181b',
+  buttonText: '#fafafa',
 } as const
 
 const fontFamily =
   '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", sans-serif'
 
-const baseUrl = siteConfig.url.replace(/\/$/, "")
+const baseUrl = siteConfig.url.replace(/\/$/, '')
 const configuredLogo = siteConfig.logo.full?.trim()
 const logoUrl = configuredLogo
   ? /^(https?:)?\/\//.test(configuredLogo)
     ? configuredLogo
-    : `${baseUrl}${configuredLogo.startsWith("/") ? "" : "/"}${configuredLogo}`
+    : `${baseUrl}${configuredLogo.startsWith('/') ? '' : '/'}${configuredLogo}`
   : null
 
 const shellStyles = {
   body: {
     backgroundColor: colors.background,
-    margin: "0",
-    padding: "32px 16px",
+    margin: '0',
+    padding: '32px 16px',
     fontFamily,
   } satisfies CSSProperties,
   container: {
-    maxWidth: "560px",
-    margin: "0 auto",
+    maxWidth: '560px',
+    margin: '0 auto',
   } satisfies CSSProperties,
   card: {
     backgroundColor: colors.cardBackground,
     border: `1px solid ${colors.border}`,
-    borderRadius: "14px",
-    padding: "28px",
+    borderRadius: '14px',
+    padding: '28px',
   } satisfies CSSProperties,
   logoWrap: {
-    margin: "0 0 12px",
+    margin: '0 0 12px',
   } satisfies CSSProperties,
   logo: {
-    display: "block",
-    maxWidth: "132px",
-    height: "auto",
+    display: 'block',
+    maxWidth: '132px',
+    height: 'auto',
   } satisfies CSSProperties,
   brand: {
-    margin: "0 0 18px",
-    fontSize: "12px",
-    fontWeight: "600",
-    letterSpacing: "0.08em",
-    textTransform: "uppercase",
+    margin: '0 0 18px',
+    fontSize: '12px',
+    fontWeight: '600',
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase',
     color: colors.muted,
   } satisfies CSSProperties,
   footer: {
-    margin: "16px 4px 0",
-    fontSize: "12px",
-    lineHeight: "18px",
+    margin: '16px 4px 0',
+    fontSize: '12px',
+    lineHeight: '18px',
     color: colors.muted,
-    textAlign: "center",
+    textAlign: 'center',
   } satisfies CSSProperties,
 } as const
 
 const contentStyles = {
   heading: {
-    margin: "0 0 14px",
+    margin: '0 0 14px',
     color: colors.heading,
-    fontSize: "26px",
-    lineHeight: "34px",
-    fontWeight: "600",
-    letterSpacing: "-0.02em",
+    fontSize: '26px',
+    lineHeight: '34px',
+    fontWeight: '600',
+    letterSpacing: '-0.02em',
   } satisfies CSSProperties,
   text: {
-    margin: "0 0 14px",
+    margin: '0 0 14px',
     color: colors.body,
-    fontSize: "15px",
-    lineHeight: "24px",
+    fontSize: '15px',
+    lineHeight: '24px',
   } satisfies CSSProperties,
   muted: {
-    margin: "0",
+    margin: '0',
     color: colors.muted,
-    fontSize: "13px",
-    lineHeight: "20px",
+    fontSize: '13px',
+    lineHeight: '20px',
   } satisfies CSSProperties,
   button: {
     backgroundColor: colors.button,
-    borderRadius: "10px",
+    borderRadius: '10px',
     color: colors.buttonText,
-    fontSize: "14px",
-    fontWeight: "600",
-    textDecoration: "none",
-    textAlign: "center",
-    display: "block",
-    padding: "12px 20px",
+    fontSize: '14px',
+    fontWeight: '600',
+    textDecoration: 'none',
+    textAlign: 'center',
+    display: 'block',
+    padding: '12px 20px',
   } satisfies CSSProperties,
   buttonWrap: {
-    margin: "22px 0 16px",
+    margin: '22px 0 16px',
   } satisfies CSSProperties,
   divider: {
-    margin: "22px 0 16px",
+    margin: '22px 0 16px',
     borderColor: colors.border,
   } satisfies CSSProperties,
   codeWrap: {
-    margin: "20px 0 16px",
+    margin: '20px 0 16px',
     border: `1px solid ${colors.border}`,
-    borderRadius: "12px",
+    borderRadius: '12px',
     backgroundColor: colors.background,
-    padding: "16px",
-    textAlign: "center",
+    padding: '16px',
+    textAlign: 'center',
   } satisfies CSSProperties,
   code: {
-    margin: "0",
+    margin: '0',
     color: colors.heading,
-    fontSize: "32px",
-    lineHeight: "40px",
-    letterSpacing: "0.34em",
-    fontWeight: "700",
-    fontFamily: '"SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
-    paddingLeft: "0.34em",
+    fontSize: '32px',
+    lineHeight: '40px',
+    letterSpacing: '0.34em',
+    fontWeight: '700',
+    fontFamily:
+      '"SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+    paddingLeft: '0.34em',
   } satisfies CSSProperties,
   inlineLink: {
     color: colors.heading,
@@ -165,7 +166,12 @@ const AuthEmailShell = ({ previewText, children }: AuthEmailShellProps) => (
         <Section style={shellStyles.card}>
           {logoUrl ? (
             <Section style={shellStyles.logoWrap}>
-              <Img src={logoUrl} alt={`${siteConfig.name} logo`} width={132} style={shellStyles.logo} />
+              <Img
+                src={logoUrl}
+                alt={`${siteConfig.name} logo`}
+                width={132}
+                style={shellStyles.logo}
+              />
             </Section>
           ) : null}
           <Text style={shellStyles.brand}>{siteConfig.name}</Text>
@@ -173,7 +179,7 @@ const AuthEmailShell = ({ previewText, children }: AuthEmailShellProps) => (
         </Section>
         <Text style={shellStyles.footer}>
           {siteConfig.name}
-          {" · "}
+          {' · '}
           If you did not expect this message, you can safely ignore it.
         </Text>
       </Container>
@@ -200,8 +206,10 @@ export const AuthActionEmail = ({
     </Section>
     <Hr style={contentStyles.divider} />
     <Text style={contentStyles.muted}>{expiryText}</Text>
-    {safetyText ? <Text style={{ ...contentStyles.muted, marginTop: "8px" }}>{safetyText}</Text> : null}
-    <Text style={{ ...contentStyles.muted, marginTop: "12px" }}>
+    {safetyText ? (
+      <Text style={{ ...contentStyles.muted, marginTop: '8px' }}>{safetyText}</Text>
+    ) : null}
+    <Text style={{ ...contentStyles.muted, marginTop: '12px' }}>
       If the button does not work, paste this URL into your browser:
       <br />
       <a href={buttonUrl} style={contentStyles.inlineLink}>
@@ -222,11 +230,15 @@ export const OtpEmail = ({ otp }: OtpEmailProps) => (
       Enter this one-time code in the sign-in screen to continue.
     </Text>
     <Section style={contentStyles.codeWrap}>
-      <Text style={contentStyles.code}>{otp}</Text>
+      <Text style={contentStyles.code}>
+        {otp.slice(0, 3)}
+        <span style={{ userSelect: 'none', WebkitUserSelect: 'none' }}> – </span>
+        {otp.slice(3)}
+      </Text>
     </Section>
     <Hr style={contentStyles.divider} />
     <Text style={contentStyles.muted}>This code expires in 10 minutes.</Text>
-    <Text style={{ ...contentStyles.muted, marginTop: "8px" }}>
+    <Text style={{ ...contentStyles.muted, marginTop: '8px' }}>
       Never share this code with anyone.
     </Text>
   </AuthEmailShell>

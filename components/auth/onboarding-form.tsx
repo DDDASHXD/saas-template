@@ -41,7 +41,7 @@ const OnboardingForm = () => {
   return (
     <div className="flex w-full flex-col items-center gap-6">
       <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-2xl font-semibold">Welcome! What's your name?</h1>
+        <h1 className="text-2xl font-semibold">Welcome! What&apos;s your name?</h1>
         <p className="text-sm text-muted-foreground">
           Let us know what to call you.
         </p>

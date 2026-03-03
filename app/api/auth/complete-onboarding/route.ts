@@ -5,6 +5,7 @@ import { encode, decode } from "next-auth/jwt"
 
 import { auth } from "@/lib/auth"
 import { getDb } from "@/lib/mongodb"
+import { ensureUserHasOrganization } from "@/lib/organizations"
 
 const getSessionCookieInfo = () => {
   const isSecure = process.env.NODE_ENV === "production"
@@ -42,6 +43,12 @@ export const POST = async (req: Request) => {
         $set: { name: normalizedName, needsOnboarding: false },
       }
     )
+
+    await ensureUserHasOrganization({
+      userId: session.user.id,
+      name: normalizedName,
+      email: session.user.email ?? undefined,
+    })
 
     const secret = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET ?? ""
     const { name: cookieName, secure } = getSessionCookieInfo()

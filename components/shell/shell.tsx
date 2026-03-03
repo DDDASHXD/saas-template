@@ -4,9 +4,10 @@ import * as React from "react"
 import Link from "next/link"
 import { signOut } from "next-auth/react"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { Logout03Icon } from "@hugeicons/core-free-icons"
+import { Logout03Icon, UserGroupIcon } from "@hugeicons/core-free-icons"
 
 import { siteConfig } from "@/config"
+import { OrganizationProvider } from "@/components/providers/organization-provider"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
@@ -26,53 +27,55 @@ import { ShellRail } from "./shell-rail"
 const Shell = ({ children }: { children: React.ReactNode }) => {
   return (
     <SettingsProvider>
-      <SidebarProvider>
-        <div
-          className="flex h-screen flex-col overflow-hidden bg-[var(--shell-chrome)]"
-          style={
-            {
-              "--shell-panel":
-                "color-mix(in oklch, var(--background) 94%, var(--foreground))",
-              "--shell-chrome":
-                "color-mix(in oklch, var(--background) 88%, var(--foreground))",
-            } as React.CSSProperties
-          }
-        >
-          <header className="flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4 md:hidden">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="flex aspect-square size-8 items-center justify-center rounded-sm bg-primary">
-                <img
-                  src={siteConfig.logo.icon}
-                  alt={siteConfig.name}
-                  className="size-6 text-primary-foreground invert dark:invert-0"
-                />
+      <OrganizationProvider>
+        <SidebarProvider>
+          <div
+            className="flex h-screen flex-col overflow-hidden bg-[var(--shell-chrome)]"
+            style={
+              {
+                "--shell-panel":
+                  "color-mix(in oklch, var(--background) 94%, var(--foreground))",
+                "--shell-chrome":
+                  "color-mix(in oklch, var(--background) 88%, var(--foreground))",
+              } as React.CSSProperties
+            }
+          >
+            <header className="flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4 md:hidden">
+              <Link href="/" className="flex items-center gap-2">
+                <div className="flex aspect-square size-8 items-center justify-center rounded-sm bg-primary">
+                  <img
+                    src={siteConfig.logo.icon}
+                    alt={siteConfig.name}
+                    className="size-6 text-primary-foreground invert dark:invert-0"
+                  />
+                </div>
+              </Link>
+              <Separator
+                orientation="vertical"
+                className="data-[orientation=vertical]:h-4"
+              />
+              <div className="shrink-0 text-sm font-medium">
+                {siteConfig.name}
               </div>
-            </Link>
-            <Separator
-              orientation="vertical"
-              className="data-[orientation=vertical]:h-4"
-            />
-            <div className="shrink-0 text-sm font-medium">
-              {siteConfig.name}
-            </div>
-            <div className="ml-auto">
-              <MobileUserMenu />
-            </div>
-          </header>
+              <div className="ml-auto">
+                <MobileUserMenu />
+              </div>
+            </header>
 
-          <div className="flex min-h-0 flex-1 md:grid md:grid-cols-[4rem_min-content_minmax(0,1fr)]">
-            <ShellRail />
-            {children}
+            <div className="flex min-h-0 flex-1 md:grid md:grid-cols-[4rem_min-content_minmax(0,1fr)]">
+              <ShellRail />
+              {children}
+            </div>
           </div>
-        </div>
-        <SettingsModal />
-      </SidebarProvider>
+          <SettingsModal />
+        </SidebarProvider>
+      </OrganizationProvider>
     </SettingsProvider>
   )
 }
 
 const MobileUserMenu = () => {
-  const { open } = useSettings()
+  const { open, openOrganization } = useSettings()
   const { name, email, image, initials } = useUser()
   const settingsSections = siteConfig.dashboard.settings
   const topItems = settingsSections[0]?.items.slice(0, 3) ?? []
@@ -113,6 +116,10 @@ const MobileUserMenu = () => {
             {item.label}
           </DropdownMenuItem>
         ))}
+        <DropdownMenuItem onClick={() => openOrganization("organization-general")}>
+          <HugeiconsIcon icon={UserGroupIcon} size={16} className="text-muted-foreground" />
+          Organization settings
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => signOut({ callbackUrl: "/" })}

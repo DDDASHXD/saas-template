@@ -8,6 +8,7 @@ import {
   Logout03Icon,
   PanelLeftCloseIcon,
   PanelLeftOpenIcon,
+  UserGroupIcon,
 } from "@hugeicons/core-free-icons"
 
 import { signOut } from "next-auth/react"
@@ -139,7 +140,7 @@ const ShellRail = () => {
 }
 
 const RailUserMenu = () => {
-  const { open } = useSettings()
+  const { open, openOrganization } = useSettings()
   const { name, email, image, initials } = useUser()
   const settingsSections = siteConfig.dashboard.settings
   const topItems = settingsSections[0]?.items.slice(0, 3) ?? []
@@ -178,6 +179,10 @@ const RailUserMenu = () => {
             {item.label}
           </DropdownMenuItem>
         ))}
+        <DropdownMenuItem onClick={() => openOrganization("organization-general")}>
+          <HugeiconsIcon icon={UserGroupIcon} size={16} className="text-muted-foreground" />
+          Organization settings
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => signOut({ callbackUrl: "/" })}

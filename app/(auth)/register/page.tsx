@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { Suspense } from "react"
 
 import { siteConfig } from "@/config"
 import { RegisterForm } from "@/components/auth/register-form"
@@ -12,11 +13,13 @@ const RegisterPage = () => {
   const enabledProviders = getEnabledProviders()
 
   return (
-    <RegisterForm
-      enabledProviders={enabledProviders}
-      genericLoginType={siteConfig.auth.genericLoginType}
-      requireEmailConfirmation={siteConfig.auth.requireEmailConfirmation}
-    />
+    <Suspense>
+      <RegisterForm
+        enabledProviders={enabledProviders}
+        genericLoginType={siteConfig.auth.genericLoginType}
+        requireEmailConfirmation={siteConfig.auth.requireEmailConfirmation}
+      />
+    </Suspense>
   )
 }
 

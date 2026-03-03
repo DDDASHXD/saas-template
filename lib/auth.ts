@@ -9,6 +9,7 @@ import { siteConfig } from "@/config"
 import { consumeEmailOtp } from "@/lib/auth-tokens"
 import authConfig from "@/lib/auth.config"
 import clientPromise, { getDb } from "@/lib/mongodb"
+import { ensureUserHasOrganization } from "@/lib/organizations"
 import { normalizeEmail } from "@/lib/auth-validation"
 
 interface AuthUserDocument {
@@ -21,6 +22,9 @@ interface AuthUserDocument {
   password?: string
   emailVerified?: Date | null
   needsOnboarding?: boolean
+  currentOrganizationId?: {
+    toString: () => string
+  } | string | null
   createdAt?: Date
   updatedAt?: Date
 }
@@ -63,13 +67,21 @@ const credentialsProvider = Credentials({
 
       if (!existingUser) {
         const name = getDefaultNameFromEmail(email)
+        const now = new Date()
         const createdUser = await usersCollection.insertOne({
           name,
           email,
           image: null,
-          emailVerified: new Date(),
+          emailVerified: now,
           needsOnboarding: true,
-          createdAt: new Date(),
+          createdAt: now,
+          updatedAt: now,
+        })
+
+        const currentOrganizationId = await ensureUserHasOrganization({
+          userId: createdUser.insertedId.toString(),
+          name,
+          email,
         })
 
         return {
@@ -78,21 +90,29 @@ const credentialsProvider = Credentials({
           email,
           image: null,
           needsOnboarding: true,
+          currentOrganizationId,
         }
       }
 
       if (!existingUser.emailVerified) {
         await usersCollection.updateOne(
           { _id: existingUser._id },
-          { $set: { emailVerified: new Date() } }
+          { $set: { emailVerified: new Date(), updatedAt: new Date() } }
         )
       }
+
+      const currentOrganizationId = await ensureUserHasOrganization({
+        userId: existingUser._id!.toString(),
+        name: existingUser.name,
+        email,
+      })
 
       return {
         id: existingUser._id!.toString(),
         name: existingUser.name ?? getDefaultNameFromEmail(email),
         email,
         image: existingUser.image ?? null,
+        currentOrganizationId,
       }
     }
 
@@ -121,11 +141,18 @@ const credentialsProvider = Credentials({
       return null
     }
 
+    const currentOrganizationId = await ensureUserHasOrganization({
+      userId: user._id!.toString(),
+      name: user.name,
+      email: user.email,
+    })
+
     return {
       id: user._id!.toString(),
       name: user.name,
       email: user.email,
       image: user.image ?? null,
+      currentOrganizationId,
     }
   },
 })
@@ -158,11 +185,22 @@ const adapter: Adapter = {
     const user = await baseAdapter.createUser!(data)
 
     const db = await getDb()
+    const updateFields = {
+      needsOnboarding: true,
+      updatedAt: new Date(),
+    }
+
     await db
       .collection("users")
-      .updateOne({ email: data.email }, { $set: { needsOnboarding: true } })
+      .updateOne({ email: data.email }, { $set: updateFields })
 
-    return { ...user, needsOnboarding: true }
+    const currentOrganizationId = await ensureUserHasOrganization({
+      userId: user.id,
+      name: user.name,
+      email: user.email,
+    })
+
+    return { ...user, needsOnboarding: true, currentOrganizationId }
   },
 }
 

@@ -94,3 +94,40 @@ export const sendEmailOtpCode = async ({
     ].join("\n\n"),
   })
 }
+
+export const sendOrganizationInvitationEmail = async ({
+  email,
+  inviterName,
+  organizationName,
+  token,
+}: {
+  email: string
+  inviterName: string
+  organizationName: string
+  token: string
+}) => {
+  const inviteUrl = `${baseUrl}/invitation/accept?token=${encodeURIComponent(token)}`
+  const html = await render(
+    createElement(AuthActionEmail, {
+      previewText: `${inviterName} invited you to ${organizationName}`,
+      title: `Join ${organizationName}`,
+      message: `${inviterName} invited you to join the ${organizationName} workspace on ${siteConfig.name}.`,
+      buttonLabel: "Accept invitation",
+      buttonUrl: inviteUrl,
+      expiryText: "This invitation expires in 7 days.",
+      safetyText: "If you were not expecting this invitation, you can ignore this email.",
+    })
+  )
+
+  await sendEmail({
+    to: email,
+    subject: `You're invited to ${organizationName}`,
+    html,
+    text: [
+      `You were invited to ${organizationName}`,
+      `${inviterName} invited you to join this workspace on ${siteConfig.name}.`,
+      `Accept invitation: ${inviteUrl}`,
+      "This invitation expires in 7 days.",
+    ].join("\n\n"),
+  })
+}

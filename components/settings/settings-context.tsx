@@ -2,12 +2,23 @@
 
 import * as React from "react"
 
+type SettingsScope = "account" | "organization"
+
+interface SettingsOpenOptions {
+  scope?: SettingsScope
+  pageId?: string
+}
+
 interface SettingsContextValue {
   isOpen: boolean
-  open: (pageId?: string) => void
+  scope: SettingsScope
+  open: (pageIdOrOptions?: string | SettingsOpenOptions) => void
+  openAccount: (pageId?: string) => void
+  openOrganization: (pageId?: string) => void
   close: () => void
   activePage: string
   setActivePage: (pageId: string) => void
+  setScope: (scope: SettingsScope) => void
 }
 
 const SettingsContext = React.createContext<SettingsContextValue | null>(null)
@@ -20,16 +31,45 @@ const useSettings = () => {
   return context
 }
 
+const DEFAULT_PAGE_BY_SCOPE: Record<SettingsScope, string> = {
+  account: "account",
+  organization: "organization-general",
+}
+
 const SettingsProvider = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = React.useState(false)
-  const [activePage, setActivePage] = React.useState("account")
+  const [scope, setScope] = React.useState<SettingsScope>("account")
+  const [activePage, setActivePage] = React.useState(DEFAULT_PAGE_BY_SCOPE.account)
 
   const open = React.useCallback(
-    (pageId?: string) => {
-      if (pageId) setActivePage(pageId)
+    (pageIdOrOptions?: string | SettingsOpenOptions) => {
+      const options: SettingsOpenOptions =
+        typeof pageIdOrOptions === "string"
+          ? { pageId: pageIdOrOptions }
+          : pageIdOrOptions ?? {}
+
+      const nextScope = options.scope ?? "account"
+      const nextPage = options.pageId ?? DEFAULT_PAGE_BY_SCOPE[nextScope]
+
+      setScope(nextScope)
+      setActivePage(nextPage)
       setIsOpen(true)
     },
     [],
+  )
+
+  const openAccount = React.useCallback(
+    (pageId?: string) => {
+      open({ scope: "account", ...(pageId ? { pageId } : {}) })
+    },
+    [open],
+  )
+
+  const openOrganization = React.useCallback(
+    (pageId?: string) => {
+      open({ scope: "organization", ...(pageId ? { pageId } : {}) })
+    },
+    [open],
   )
 
   const close = React.useCallback(() => {
@@ -37,8 +77,18 @@ const SettingsProvider = ({ children }: { children: React.ReactNode }) => {
   }, [])
 
   const value = React.useMemo<SettingsContextValue>(
-    () => ({ isOpen, open, close, activePage, setActivePage }),
-    [isOpen, open, close, activePage],
+    () => ({
+      isOpen,
+      scope,
+      open,
+      openAccount,
+      openOrganization,
+      close,
+      activePage,
+      setActivePage,
+      setScope,
+    }),
+    [isOpen, scope, open, openAccount, openOrganization, close, activePage],
   )
 
   return (
@@ -49,3 +99,4 @@ const SettingsProvider = ({ children }: { children: React.ReactNode }) => {
 }
 
 export { SettingsProvider, useSettings }
+export type { SettingsScope, SettingsOpenOptions }

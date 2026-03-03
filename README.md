@@ -10,6 +10,10 @@
 - Email OTP flow with automatic user creation on first successful code login
 - MongoDB integration for users/auth data (via `@auth/mongodb-adapter`)
 - Resend integration for confirmation emails, OTP codes, and reset links
+- Multi-tenant organizations with automatic personal org creation for new users
+- Organization member management (invite, role updates, remove/leave safeguards)
+- Permission-based access helpers for both server and client components
+- In-app notification system with per-user delivery state + invitation notifications
 - Protected dashboard route groups with custom sidebars and a shared app shell
 - Config-driven rail navigation, footer links/socials, branding, and settings sections
 - Config-driven MDX documentation area with generated sidebar tree + in-page table of contents
@@ -203,6 +207,47 @@ In `emailOTP` mode, a missing user is created after successful OTP verification 
 
 - `name` derived from email local-part
 - `emailVerified` set immediately
+
+## Organizations, Permissions, and Notifications (High-Level)
+
+This template includes a practical multi-tenant setup out of the box:
+
+- users belong to one or more organizations
+- each user has a `currentOrganizationId`
+- each user automatically gets a personal "home" organization on onboarding/sign-up
+- invitations can be sent to add users to organizations
+- access checks are permission-based and can run on both server and client
+- notifications are shared content + per-user delivery/read state
+
+If you need full implementation details, data contracts, and extension patterns, see [`ORGANIZATIONS.md`](./ORGANIZATIONS.md).
+
+### Key Concepts
+
+- **Organization**: tenant/workspace record (`organizations`)
+- **Membership**: user role in an org (`organization_memberships`)
+- **Invitation**: pending org join request (`invitations`)
+- **Notification**: shared event payload (`notifications`)
+- **Notification delivery**: per-user state (`notification_deliveries`)
+
+### Roles and Permissions
+
+- Permission catalog lives in [`permissions.ts`](./permissions.ts)
+- Role definitions live in [`roles.ts`](./roles.ts)
+- Role selectors in settings are dynamic from `roles.ts` (no hardcoded list)
+- Use permission checks for authorization rather than role-name string checks
+
+### Access Helpers
+
+- Client hooks: [`hooks/use-permission.ts`](./hooks/use-permission.ts)
+- Server checks: [`lib/organization-access.ts`](./lib/organization-access.ts)
+- Route/API guards: [`lib/permission-route-guards.ts`](./lib/permission-route-guards.ts)
+
+### Invitation + Notification UX
+
+- Inviting users creates invitation records and can send email when configured
+- Invitation-related in-app notifications are created regardless of email setup
+- Notification actions support multiple behaviors (`route`, `url`, `open_settings`, `alert_dialog`, invitation accept action)
+- The shell bell dropdown surfaces notifications in [`components/shell/shell-sidebar.tsx`](./components/shell/shell-sidebar.tsx)
 
 ## Config System (`config.ts`)
 

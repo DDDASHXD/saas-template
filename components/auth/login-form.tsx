@@ -1,17 +1,19 @@
-"use client"
+'use client'
 
-import * as React from "react"
-import Link from "next/link"
-import { useRouter, useSearchParams } from "next/navigation"
-import { signIn } from "next-auth/react"
-import { DiscordIcon, GithubIcon, NewTwitterIcon } from "@hugeicons/core-free-icons"
-import { HugeiconsIcon } from "@hugeicons/react"
+import * as React from 'react'
+import Link from 'next/link'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { signIn } from 'next-auth/react'
+import { DiscordIcon, GithubIcon, NewTwitterIcon } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { REGEXP_ONLY_DIGITS } from 'input-otp'
 
-import type { GenericLoginType } from "@/types"
+import type { GenericLoginType } from '@/types'
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from '@/components/ui/input-otp'
+import { Label } from '@/components/ui/label'
 
 interface LoginFormProps {
   enabledProviders: string[]
@@ -21,7 +23,7 @@ interface LoginFormProps {
 
 const providerConfig: Record<string, { label: string; icon: React.ReactNode }> = {
   google: {
-    label: "Google",
+    label: 'Google',
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -49,15 +51,15 @@ const providerConfig: Record<string, { label: string; icon: React.ReactNode }> =
     ),
   },
   discord: {
-    label: "Discord",
+    label: 'Discord',
     icon: <HugeiconsIcon icon={DiscordIcon} className="size-5" />,
   },
   github: {
-    label: "GitHub",
+    label: 'GitHub',
     icon: <HugeiconsIcon icon={GithubIcon} className="size-5" />,
   },
   twitter: {
-    label: "X",
+    label: 'X',
     icon: <HugeiconsIcon icon={NewTwitterIcon} className="size-5" />,
   },
 }
@@ -69,30 +71,35 @@ const LoginForm = ({
 }: LoginFormProps) => {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const callbackUrlParam = searchParams.get("callbackUrl")
+  const callbackUrl =
+    callbackUrlParam && callbackUrlParam.startsWith("/") ? callbackUrlParam : "/overview"
+  const callbackQuery =
+    callbackUrl !== "/overview" ? `?callbackUrl=${encodeURIComponent(callbackUrl)}` : ""
 
-  const [email, setEmail] = React.useState("")
-  const [password, setPassword] = React.useState("")
-  const [otp, setOtp] = React.useState("")
+  const [email, setEmail] = React.useState('')
+  const [password, setPassword] = React.useState('')
+  const [otp, setOtp] = React.useState('')
   const [isOtpStep, setIsOtpStep] = React.useState(false)
-  const [error, setError] = React.useState("")
-  const [info, setInfo] = React.useState("")
-  const [pendingConfirmationEmail, setPendingConfirmationEmail] = React.useState("")
+  const [error, setError] = React.useState('')
+  const [info, setInfo] = React.useState('')
+  const [pendingConfirmationEmail, setPendingConfirmationEmail] = React.useState('')
   const [isLoading, setIsLoading] = React.useState(false)
   const [isResendingConfirmation, setIsResendingConfirmation] = React.useState(false)
 
-  const confirmationSuccess = searchParams.get("confirmed") === "1"
-  const resetSuccess = searchParams.get("reset") === "success"
-  const queryError = searchParams.get("error")
+  const confirmationSuccess = searchParams.get('confirmed') === '1'
+  const resetSuccess = searchParams.get('reset') === 'success'
+  const queryError = searchParams.get('error')
 
   const queryErrorMessage =
-    queryError === "invalid_confirmation_token"
-      ? "Confirmation link is invalid or expired."
-      : queryError === "confirmation_failed"
-        ? "Could not confirm email. Please request a new confirmation email."
-        : ""
+    queryError === 'invalid_confirmation_token'
+      ? 'Confirmation link is invalid or expired.'
+      : queryError === 'confirmation_failed'
+        ? 'Could not confirm email. Please request a new confirmation email.'
+        : ''
 
   const handlePasswordSignIn = async () => {
-    const result = await signIn("credentials", {
+    const result = await signIn('credentials', {
       email,
       password,
       redirect: false,
@@ -101,64 +108,64 @@ const LoginForm = ({
     if (result?.error) {
       if (requireEmailConfirmation) {
         setPendingConfirmationEmail(email)
-        setError("Invalid credentials or your email has not been confirmed yet.")
+        setError('Invalid credentials or your email has not been confirmed yet.')
         return
       }
 
-      setError("Invalid email or password.")
+      setError('Invalid email or password.')
       return
     }
 
-    router.push("/overview")
+    router.push(callbackUrl)
     router.refresh()
   }
 
   const requestOtpCode = async () => {
-    const response = await fetch("/api/auth/request-email-otp", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    const response = await fetch('/api/auth/request-email-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email }),
     })
 
     const data = await response.json().catch(() => null)
 
     if (!response.ok) {
-      setError(data?.error ?? "Could not send sign-in code.")
+      setError(data?.error ?? 'Could not send sign-in code.')
       return
     }
 
     setIsOtpStep(true)
-    setInfo("We sent a 6-digit sign-in code to your email.")
+    setInfo('We sent a 6-digit sign-in code to your email.')
   }
 
   const handleOtpSignIn = async () => {
-    const result = await signIn("credentials", {
+    const result = await signIn('credentials', {
       email,
       otp,
       redirect: false,
     })
 
     if (result?.error) {
-      setError("Invalid or expired code.")
+      setError('Invalid or expired code.')
       return
     }
 
-    router.push("/overview")
+    router.push(callbackUrl)
     router.refresh()
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError("")
-    setInfo("")
+    setError('')
+    setInfo('')
     setIsLoading(true)
 
     try {
-      if (genericLoginType === "emailAndPassword") {
+      if (genericLoginType === 'emailAndPassword') {
         await handlePasswordSignIn()
       }
 
-      if (genericLoginType === "emailOTP") {
+      if (genericLoginType === 'emailOTP') {
         if (!isOtpStep) {
           await requestOtpCode()
         } else {
@@ -166,14 +173,14 @@ const LoginForm = ({
         }
       }
     } catch {
-      setError("Something went wrong. Please try again.")
+      setError('Something went wrong. Please try again.')
     } finally {
       setIsLoading(false)
     }
   }
 
   const handleOAuthSignIn = (provider: string) => {
-    signIn(provider, { callbackUrl: "/overview" })
+    signIn(provider, { callbackUrl })
   }
 
   const handleResendConfirmation = async () => {
@@ -182,32 +189,31 @@ const LoginForm = ({
     }
 
     setIsResendingConfirmation(true)
-    setError("")
+    setError('')
 
     try {
-      const response = await fetch("/api/auth/resend-confirmation", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/auth/resend-confirmation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: pendingConfirmationEmail }),
       })
 
       const data = await response.json().catch(() => null)
 
       if (!response.ok) {
-        setError(data?.error ?? "Could not resend confirmation email.")
+        setError(data?.error ?? 'Could not resend confirmation email.')
         return
       }
 
-      setInfo("If your account needs confirmation, a new email has been sent.")
+      setInfo('If your account needs confirmation, a new email has been sent.')
     } catch {
-      setError("Something went wrong. Please try again.")
+      setError('Something went wrong. Please try again.')
     } finally {
       setIsResendingConfirmation(false)
     }
   }
 
-  const title =
-    genericLoginType === "emailOTP" ? "Sign In with Email Code" : "Sign In"
+  const title = genericLoginType === 'emailOTP' ? 'Sign In with Email Code' : 'Sign In'
 
   return (
     <div className="flex w-full flex-col items-center gap-6">
@@ -243,7 +249,7 @@ const LoginForm = ({
         </div>
       )}
 
-      {genericLoginType !== "none" && (
+      {genericLoginType !== 'none' && (
         <form onSubmit={handleSubmit} className="flex w-full flex-col gap-4">
           <div className="flex flex-col gap-2">
             <Label htmlFor="email">Email</Label>
@@ -258,7 +264,7 @@ const LoginForm = ({
             />
           </div>
 
-          {genericLoginType === "emailAndPassword" && (
+          {genericLoginType === 'emailAndPassword' && (
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Password</Label>
@@ -281,31 +287,44 @@ const LoginForm = ({
             </div>
           )}
 
-          {genericLoginType === "emailOTP" && isOtpStep && (
+          {genericLoginType === 'emailOTP' && isOtpStep && (
             <div className="flex flex-col gap-2">
               <Label htmlFor="otp">6-digit code</Label>
-              <Input
+              <InputOTP
                 id="otp"
                 inputMode="numeric"
-                pattern="[0-9]{6}"
-                placeholder="123456"
+                maxLength={6}
+                pattern={REGEXP_ONLY_DIGITS}
                 value={otp}
-                onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                onChange={setOtp}
+                containerClassName="justify-center sm:justify-start mx-auto w-full"
                 required
                 disabled={isLoading}
-              />
+              >
+                <InputOTPGroup className="w-full">
+                  <InputOTPSlot index={0} className="w-full" />
+                  <InputOTPSlot index={1} className="w-full" />
+                  <InputOTPSlot index={2} className="w-full" />
+                </InputOTPGroup>
+                <InputOTPSeparator />
+                <InputOTPGroup className="w-full">
+                  <InputOTPSlot index={3} className="w-full" />
+                  <InputOTPSlot index={4} className="w-full" />
+                  <InputOTPSlot index={5} className="w-full" />
+                </InputOTPGroup>
+              </InputOTP>
             </div>
           )}
 
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading
-              ? "Please wait..."
-              : genericLoginType === "emailOTP" && !isOtpStep
-                ? "Send Code"
-                : "Sign In"}
+              ? 'Please wait...'
+              : genericLoginType === 'emailOTP' && !isOtpStep
+                ? 'Send Code'
+                : 'Sign In'}
           </Button>
 
-          {genericLoginType === "emailOTP" && isOtpStep && (
+          {genericLoginType === 'emailOTP' && isOtpStep && (
             <Button
               type="button"
               variant="outline"
@@ -317,16 +336,16 @@ const LoginForm = ({
             </Button>
           )}
 
-          {genericLoginType === "emailOTP" && isOtpStep && (
+          {genericLoginType === 'emailOTP' && isOtpStep && (
             <Button
               type="button"
               variant="ghost"
               className="w-full"
               onClick={() => {
                 setIsOtpStep(false)
-                setOtp("")
-                setInfo("")
-                setError("")
+                setOtp('')
+                setInfo('')
+                setError('')
               }}
               disabled={isLoading}
             >
@@ -345,8 +364,8 @@ const LoginForm = ({
           disabled={isResendingConfirmation}
         >
           {isResendingConfirmation
-            ? "Resending confirmation email..."
-            : "Resend confirmation email"}
+            ? 'Resending confirmation email...'
+            : 'Resend confirmation email'}
         </Button>
       )}
 
@@ -355,7 +374,7 @@ const LoginForm = ({
           <div className="flex w-full items-center gap-4">
             <div className="h-px flex-1 bg-border" />
             <span className="text-xs text-muted-foreground">
-              {genericLoginType === "none" ? "continue with" : "or"}
+              {genericLoginType === 'none' ? 'continue with' : 'or'}
             </span>
             <div className="h-px flex-1 bg-border" />
           </div>
@@ -383,22 +402,22 @@ const LoginForm = ({
         </>
       )}
 
-      {genericLoginType === "none" && enabledProviders.length === 0 && (
+      {genericLoginType === 'none' && enabledProviders.length === 0 && (
         <p className="text-center text-sm text-muted-foreground">
           No login providers are configured.
         </p>
       )}
 
-      {genericLoginType === "emailAndPassword" && (
+      {genericLoginType === 'emailAndPassword' && (
         <div className="flex justify-center gap-1 text-sm text-muted-foreground">
           <p>Don&apos;t have an account?</p>
-          <Link href="/register" className="font-medium text-primary hover:underline">
+          <Link href={`/register${callbackQuery}`} className="font-medium text-primary hover:underline">
             Sign up
           </Link>
         </div>
       )}
 
-      {genericLoginType === "emailOTP" && (
+      {genericLoginType === 'emailOTP' && (
         <p className="text-center text-sm text-muted-foreground">
           Your account is created automatically after successful email verification.
         </p>

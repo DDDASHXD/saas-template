@@ -1,23 +1,24 @@
-import type { Metadata } from "next"
-import { Geist, Geist_Mono, Noto_Sans } from "next/font/google"
+import type { Metadata } from 'next'
+import { Geist, Geist_Mono, Noto_Sans } from 'next/font/google'
 
-import { siteConfig } from "@/config"
+import { siteConfig } from '@/config'
 
-import { SessionProvider } from "@/components/providers/session-provider"
-import { ThemeProvider } from "@/components/providers/theme-provider"
+import { SessionProvider } from '@/components/providers/session-provider'
+import { ThemeProvider } from '@/components/providers/theme-provider'
 
-import "./globals.css"
+import './globals.css'
+import { Toaster } from 'sonner'
 
-const notoSans = Noto_Sans({ variable: "--font-sans" })
+const notoSans = Noto_Sans({ variable: '--font-sans' })
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
 })
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 })
 
 export const metadata: Metadata = {
@@ -36,9 +37,8 @@ const RootLayout = ({
 }>) => {
   return (
     <html lang="en" className={notoSans.variable} suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <Toaster />
         <ThemeProvider>
           <SessionProvider>{children}</SessionProvider>
         </ThemeProvider>

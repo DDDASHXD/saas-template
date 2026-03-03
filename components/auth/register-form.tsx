@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { signIn } from "next-auth/react"
 import { DiscordIcon, GithubIcon, NewTwitterIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
@@ -68,6 +68,12 @@ const RegisterForm = ({
   requireEmailConfirmation,
 }: RegisterFormProps) => {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const callbackUrlParam = searchParams.get("callbackUrl")
+  const callbackUrl =
+    callbackUrlParam && callbackUrlParam.startsWith("/") ? callbackUrlParam : "/overview"
+  const callbackQuery =
+    callbackUrl !== "/overview" ? `?callbackUrl=${encodeURIComponent(callbackUrl)}` : ""
 
   const [name, setName] = React.useState("")
   const [email, setEmail] = React.useState("")
@@ -117,7 +123,7 @@ const RegisterForm = ({
         return
       }
 
-      router.push("/overview")
+      router.push(callbackUrl)
       router.refresh()
     } catch {
       setError("Something went wrong. Please try again.")
@@ -127,7 +133,7 @@ const RegisterForm = ({
   }
 
   const handleOAuthSignIn = (provider: string) => {
-    signIn(provider, { callbackUrl: "/overview" })
+    signIn(provider, { callbackUrl })
   }
 
   return (
@@ -233,7 +239,7 @@ const RegisterForm = ({
 
       <div className="flex justify-center gap-1 text-sm text-muted-foreground">
         <p>Already have an account?</p>
-        <Link href="/login" className="font-medium text-primary hover:underline">
+        <Link href={`/login${callbackQuery}`} className="font-medium text-primary hover:underline">
           Sign in
         </Link>
       </div>

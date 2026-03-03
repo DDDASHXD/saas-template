@@ -4,6 +4,7 @@ import "next-auth/jwt"
 declare module "next-auth" {
   interface User {
     needsOnboarding?: boolean
+    currentOrganizationId?: string | null
   }
 
   interface Session {
@@ -13,6 +14,7 @@ declare module "next-auth" {
       email?: string | null
       image?: string | null
       needsOnboarding?: boolean
+      currentOrganizationId?: string | null
     }
   }
 }
@@ -20,5 +22,6 @@ declare module "next-auth" {
 declare module "next-auth/jwt" {
   interface JWT {
     needsOnboarding?: boolean
+    currentOrganizationId?: string | null
   }
 }

@@ -7,6 +7,7 @@ import {
   FolderLibraryIcon,
   Home01Icon,
   InformationCircleIcon,
+  KeyIcon,
   Message01Icon,
 } from '@hugeicons/core-free-icons'
 
@@ -38,6 +39,9 @@ const HomeLayout = ({ children }: { children: React.ReactNode }) => {
           </ShellSidebarItem>
           <ShellSidebarItem icon={InformationCircleIcon} href="/documentation">
             Documentation
+          </ShellSidebarItem>
+          <ShellSidebarItem icon={KeyIcon} href="/permission-routes">
+            Permission Routes
           </ShellSidebarItem>
         </ShellSidebarGroup>
         <ShellSidebarGroup label="Workspace">
