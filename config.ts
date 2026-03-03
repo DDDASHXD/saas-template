@@ -28,7 +28,7 @@ export const siteConfig: SiteConfig = {
   url: process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000',
   auth: {
     requireEmailConfirmation: true,
-    genericLoginType: 'emailAndPassword',
+    genericLoginType: 'emailOTP',
   },
 
   logo: {
@@ -41,6 +41,7 @@ export const siteConfig: SiteConfig = {
     { label: 'Pricing', href: '/pricing' },
     { label: 'Blog', href: '/blog' },
     { label: 'Docs', href: '/docs' },
+    { label: 'View on GitHub', href: 'https://github.com/DDDASHXD/saas-template' },
   ],
 
   footer: {

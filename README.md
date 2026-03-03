@@ -83,26 +83,26 @@ pnpm dev
 
 ### Complete Reference
 
-| Variable | Required | Purpose |
-| --- | --- | --- |
-| `MONGODB_URI` | Yes | Required at startup. Missing value throws immediately from [`lib/mongodb.ts`](./lib/mongodb.ts). |
-| `NEXTAUTH_SECRET` | Yes | Secret for NextAuth JWT/session security. |
-| `NEXTAUTH_URL` | Recommended | NextAuth base URL, especially important in production. |
-| `NEXT_PUBLIC_APP_URL` | Recommended | Used by [`config.ts`](./config.ts) as `siteConfig.url`; drives metadata base URL and email link generation. Defaults to `http://localhost:3000`. |
-| `RESEND_API_KEY` | Conditional | Required for email confirmation, email OTP, and forgot-password email delivery. |
-| `RESEND_FROM_EMAIL` | No | Custom sender address. Falls back to `${siteConfig.name} <noreply@mail.skxv.dev>`. |
-| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | Optional | Enables Google OAuth button/provider. |
-| `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` | Optional | Enables GitHub OAuth button/provider. |
-| `DISCORD_CLIENT_ID` / `DISCORD_CLIENT_SECRET` | Optional | Enables Discord OAuth button/provider. |
-| `TWITTER_CLIENT_ID` / `TWITTER_CLIENT_SECRET` | Optional | Enables Twitter/X OAuth button/provider. |
+| Variable                                      | Required    | Purpose                                                                                                                                          |
+| --------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `MONGODB_URI`                                 | Yes         | Required at startup. Missing value throws immediately from [`lib/mongodb.ts`](./lib/mongodb.ts).                                                 |
+| `NEXTAUTH_SECRET`                             | Yes         | Secret for NextAuth JWT/session security.                                                                                                        |
+| `NEXTAUTH_URL`                                | Recommended | NextAuth base URL, especially important in production.                                                                                           |
+| `NEXT_PUBLIC_APP_URL`                         | Recommended | Used by [`config.ts`](./config.ts) as `siteConfig.url`; drives metadata base URL and email link generation. Defaults to `http://localhost:3000`. |
+| `RESEND_API_KEY`                              | Conditional | Required for email confirmation, email OTP, and forgot-password email delivery.                                                                  |
+| `RESEND_FROM_EMAIL`                           | No          | Custom sender address. Falls back to `${siteConfig.name} <noreply@mail.skxv.dev>`.                                                               |
+| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`   | Optional    | Enables Google OAuth button/provider.                                                                                                            |
+| `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET`   | Optional    | Enables GitHub OAuth button/provider.                                                                                                            |
+| `DISCORD_CLIENT_ID` / `DISCORD_CLIENT_SECRET` | Optional    | Enables Discord OAuth button/provider.                                                                                                           |
+| `TWITTER_CLIENT_ID` / `TWITTER_CLIENT_SECRET` | Optional    | Enables Twitter/X OAuth button/provider.                                                                                                         |
 
 ### Auth Mode Requirements Matrix
 
-| `siteConfig.auth.genericLoginType` | Credentials Login | OTP Login | Register Form | Resend Needed? |
-| --- | --- | --- | --- | --- |
-| `emailAndPassword` | Yes | No | Enabled | Only if `requireEmailConfirmation=true` or using forgot-password |
-| `emailOTP` | No password login | Yes (`/api/auth/request-email-otp`) | Disabled (users auto-created on first OTP success) | Yes |
-| `none` | Disabled | Disabled | Disabled | No (unless you use custom email features) |
+| `siteConfig.auth.genericLoginType` | Credentials Login | OTP Login                           | Register Form                                      | Resend Needed?                                                   |
+| ---------------------------------- | ----------------- | ----------------------------------- | -------------------------------------------------- | ---------------------------------------------------------------- |
+| `emailAndPassword`                 | Yes               | No                                  | Enabled                                            | Only if `requireEmailConfirmation=true` or using forgot-password |
+| `emailOTP`                         | No password login | Yes (`/api/auth/request-email-otp`) | Disabled (users auto-created on first OTP success) | Yes                                                              |
+| `none`                             | Disabled          | Disabled                            | Disabled                                           | No (unless you use custom email features)                        |
 
 ### `requireEmailConfirmation` Behavior
 
@@ -153,15 +153,15 @@ Middleware matcher in [`middleware.ts`](./middleware.ts) excludes API routes, Ne
 
 ## Auth API Endpoints
 
-| Endpoint | Method | Purpose | Important Rules |
-| --- | --- | --- | --- |
-| `/api/auth/[...nextauth]` | `GET/POST` | NextAuth handlers | Exported from `lib/auth.ts`. |
-| `/api/auth/register` | `POST` | Create email/password user | Only active in `emailAndPassword` mode; password min length 8; optional email confirmation flow. |
-| `/api/auth/confirm-email` | `GET` | Verify confirmation token | Consumes token, sets `users.emailVerified`, redirects to login with query status. |
-| `/api/auth/resend-confirmation` | `POST` | Re-issue confirmation email | Requires `requireEmailConfirmation=true` and `RESEND_API_KEY`. |
-| `/api/auth/forgot-password` | `POST` | Send password reset link | Only in `emailAndPassword`; returns generic success message to avoid account enumeration. |
-| `/api/auth/reset-password` | `POST` | Apply new password | Requires valid unexpired reset token + password length >= 8. |
-| `/api/auth/request-email-otp` | `POST` | Send 6-digit OTP code | Only in `emailOTP`; requires `RESEND_API_KEY`. |
+| Endpoint                        | Method     | Purpose                     | Important Rules                                                                                  |
+| ------------------------------- | ---------- | --------------------------- | ------------------------------------------------------------------------------------------------ |
+| `/api/auth/[...nextauth]`       | `GET/POST` | NextAuth handlers           | Exported from `lib/auth.ts`.                                                                     |
+| `/api/auth/register`            | `POST`     | Create email/password user  | Only active in `emailAndPassword` mode; password min length 8; optional email confirmation flow. |
+| `/api/auth/confirm-email`       | `GET`      | Verify confirmation token   | Consumes token, sets `users.emailVerified`, redirects to login with query status.                |
+| `/api/auth/resend-confirmation` | `POST`     | Re-issue confirmation email | Requires `requireEmailConfirmation=true` and `RESEND_API_KEY`.                                   |
+| `/api/auth/forgot-password`     | `POST`     | Send password reset link    | Only in `emailAndPassword`; returns generic success message to avoid account enumeration.        |
+| `/api/auth/reset-password`      | `POST`     | Apply new password          | Requires valid unexpired reset token + password length >= 8.                                     |
+| `/api/auth/request-email-otp`   | `POST`     | Send 6-digit OTP code       | Only in `emailOTP`; requires `RESEND_API_KEY`.                                                   |
 
 ## Token and Email Rules
 
@@ -210,20 +210,20 @@ All major product-level customization is centralized in [`config.ts`](./config.t
 
 ### Top-Level Fields
 
-| Field | Used In |
-| --- | --- |
-| `name` | Metadata title template, branding in shell/footer/nav, default email sender name |
-| `description` | Metadata description |
-| `url` | Metadata base URL + email link origin |
-| `auth` | Login mode + email-confirmation requirements |
-| `logo.full` | Landing nav/footer branding |
-| `logo.icon` | Auth layout + dashboard shell branding |
-| `nav` | Landing navigation links |
-| `footer.categories` | Footer link columns |
-| `footer.socials` | Footer social icons/links |
-| `dashboard.sidebar.items` | Left rail icons + MDX rail mapping |
-| `dashboard.sidebar.utilities` | Bottom utility links in sidebar panel |
-| `dashboard.settings` | Settings modal sections/items and account menu shortcuts |
+| Field                         | Used In                                                                          |
+| ----------------------------- | -------------------------------------------------------------------------------- |
+| `name`                        | Metadata title template, branding in shell/footer/nav, default email sender name |
+| `description`                 | Metadata description                                                             |
+| `url`                         | Metadata base URL + email link origin                                            |
+| `auth`                        | Login mode + email-confirmation requirements                                     |
+| `logo.full`                   | Landing nav/footer branding                                                      |
+| `logo.icon`                   | Auth layout + dashboard shell branding                                           |
+| `nav`                         | Landing navigation links                                                         |
+| `footer.categories`           | Footer link columns                                                              |
+| `footer.socials`              | Footer social icons/links                                                        |
+| `dashboard.sidebar.items`     | Left rail icons + MDX rail mapping                                               |
+| `dashboard.sidebar.utilities` | Bottom utility links in sidebar panel                                            |
+| `dashboard.settings`          | Settings modal sections/items and account menu shortcuts                         |
 
 ### Sidebar Rail Item Types
 
@@ -366,7 +366,3 @@ Implement these routes before production launch or adjust links in [`config.ts`]
 - Ensure placeholder links are replaced or implemented
 - Run `pnpm build` and `pnpm lint`
 - Verify auth flows for selected login mode
-
-## License
-
-The project README currently states MIT intent, but there is no `LICENSE` file in this repository yet. Add one before distribution if needed.

@@ -3,6 +3,8 @@ import { MongoDBAdapter } from "@auth/mongodb-adapter"
 import Credentials from "next-auth/providers/credentials"
 import bcrypt from "bcryptjs"
 
+import type { Adapter, AdapterUser } from "next-auth/adapters"
+
 import { siteConfig } from "@/config"
 import { consumeEmailOtp } from "@/lib/auth-tokens"
 import authConfig from "@/lib/auth.config"
@@ -18,6 +20,7 @@ interface AuthUserDocument {
   image?: string | null
   password?: string
   emailVerified?: Date | null
+  needsOnboarding?: boolean
   createdAt?: Date
   updatedAt?: Date
 }
@@ -65,6 +68,7 @@ const credentialsProvider = Credentials({
           email,
           image: null,
           emailVerified: new Date(),
+          needsOnboarding: true,
           createdAt: new Date(),
         })
 
@@ -73,6 +77,7 @@ const credentialsProvider = Credentials({
           name,
           email,
           image: null,
+          needsOnboarding: true,
         }
       }
 
@@ -145,8 +150,24 @@ if (providers.length === 0) {
   )
 }
 
+const baseAdapter = MongoDBAdapter(clientPromise) as Adapter
+
+const adapter: Adapter = {
+  ...baseAdapter,
+  async createUser(data: AdapterUser) {
+    const user = await baseAdapter.createUser!(data)
+
+    const db = await getDb()
+    await db
+      .collection("users")
+      .updateOne({ email: data.email }, { $set: { needsOnboarding: true } })
+
+    return { ...user, needsOnboarding: true }
+  },
+}
+
 export const { auth, handlers, signIn, signOut } = NextAuth({
   ...authConfig,
-  adapter: MongoDBAdapter(clientPromise),
+  adapter,
   providers,
 })
