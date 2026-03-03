@@ -7,6 +7,7 @@ import {
   DatabaseIcon,
 } from '@hugeicons/core-free-icons'
 
+import { siteConfig } from '@/config'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -16,6 +17,9 @@ interface HeroProps {
 }
 
 const Hero = ({ className }: HeroProps) => {
+  const getStartedHref =
+    siteConfig.auth.genericLoginType === 'emailAndPassword' ? '/register' : '/login'
+
   return (
     <section className={cn('py-32', className)}>
       <div className="container">
@@ -50,7 +54,7 @@ const Hero = ({ className }: HeroProps) => {
             and more. Clone, configure, and launch.
           </p>
           <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
-            <Button size="lg" nativeButton={false} render={<Link href="/register" />}>
+            <Button size="lg" nativeButton={false} render={<Link href={getStartedHref} />}>
               Get started
               <HugeiconsIcon icon={ArrowRight01Icon} size={16} />
             </Button>

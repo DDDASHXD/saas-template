@@ -20,6 +20,7 @@ import {
   UserGroupIcon,
 } from '@hugeicons/core-free-icons'
 
+import { siteConfig } from '@/config'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -181,6 +182,9 @@ interface FeaturesCarouselProps {
 }
 
 const FeaturesCarousel = ({ className }: FeaturesCarouselProps) => {
+  const getStartedHref =
+    siteConfig.auth.genericLoginType === 'emailAndPassword' ? '/register' : '/login'
+
   return (
     <section className={cn('py-32', className)}>
       <div className="container">
@@ -216,7 +220,7 @@ const FeaturesCarousel = ({ className }: FeaturesCarouselProps) => {
               size="lg"
               className="w-fit gap-2"
               nativeButton={false}
-              render={<Link href="/register" />}
+              render={<Link href={getStartedHref} />}
             >
               Get started
               <HugeiconsIcon icon={ArrowRight01Icon} size={16} />

@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import Link from 'next/link'
+import { useSession } from 'next-auth/react'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Menu01Icon } from '@hugeicons/core-free-icons'
 
@@ -21,6 +22,10 @@ interface NavProps {
 
 const Nav = ({ className }: NavProps) => {
   const [mobileOpen, setMobileOpen] = React.useState(false)
+  const { status } = useSession()
+  const isAuthenticated = status === 'authenticated'
+  const getStartedHref =
+    siteConfig.auth.genericLoginType === 'emailAndPassword' ? '/register' : '/login'
 
   return (
     <header
@@ -54,10 +59,20 @@ const Nav = ({ className }: NavProps) => {
         </nav>
 
         <div className="hidden flex-1 items-center justify-end gap-2 md:flex">
-          <Button variant="ghost" nativeButton={false} render={<Link href="/login" />}>
-            Sign In
-          </Button>
-          <Button nativeButton={false} render={<Link href="/register" />}>Get Started</Button>
+          {isAuthenticated ? (
+            <Button nativeButton={false} render={<Link href="/overview" />}>
+              Dashboard
+            </Button>
+          ) : (
+            <>
+              <Button variant="ghost" nativeButton={false} render={<Link href="/login" />}>
+                Sign In
+              </Button>
+              <Button nativeButton={false} render={<Link href={getStartedHref} />}>
+                Get Started
+              </Button>
+            </>
+          )}
         </div>
 
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
@@ -82,10 +97,20 @@ const Nav = ({ className }: NavProps) => {
                 </Link>
               ))}
               <div className="mt-4 flex flex-col gap-2 border-t pt-4">
-                <Button variant="ghost" nativeButton={false} render={<Link href="/login" />}>
-                  Sign In
-                </Button>
-                <Button nativeButton={false} render={<Link href="/register" />}>Get Started</Button>
+                {isAuthenticated ? (
+                  <Button nativeButton={false} render={<Link href="/overview" />}>
+                    Dashboard
+                  </Button>
+                ) : (
+                  <>
+                    <Button variant="ghost" nativeButton={false} render={<Link href="/login" />}>
+                      Sign In
+                    </Button>
+                    <Button nativeButton={false} render={<Link href={getStartedHref} />}>
+                      Get Started
+                    </Button>
+                  </>
+                )}
               </div>
             </nav>
           </SheetContent>

@@ -366,3 +366,7 @@ Implement these routes before production launch or adjust links in [`config.ts`]
 - Ensure placeholder links are replaced or implemented
 - Run `pnpm build` and `pnpm lint`
 - Verify auth flows for selected login mode
+
+## License
+
+This template is licensed under the MIT License. See [LICENSE](./LICENSE) for details.

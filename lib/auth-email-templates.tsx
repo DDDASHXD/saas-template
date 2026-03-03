@@ -74,7 +74,7 @@ const shellStyles = {
   } satisfies CSSProperties,
   logo: {
     display: "block",
-    maxWidth: "172px",
+    maxWidth: "132px",
     height: "auto",
   } satisfies CSSProperties,
   brand: {
@@ -165,7 +165,7 @@ const AuthEmailShell = ({ previewText, children }: AuthEmailShellProps) => (
         <Section style={shellStyles.card}>
           {logoUrl ? (
             <Section style={shellStyles.logoWrap}>
-              <Img src={logoUrl} alt={`${siteConfig.name} logo`} width={172} style={shellStyles.logo} />
+              <Img src={logoUrl} alt={`${siteConfig.name} logo`} width={132} style={shellStyles.logo} />
             </Section>
           ) : null}
           <Text style={shellStyles.brand}>{siteConfig.name}</Text>
