@@ -1,3 +1,5 @@
+import { siteConfig } from "@/config"
+
 export const getEnabledProviders = () => {
   const providers: string[] = []
   if (process.env.GOOGLE_CLIENT_ID) providers.push("google")
@@ -6,3 +8,5 @@ export const getEnabledProviders = () => {
   if (process.env.TWITTER_CLIENT_ID) providers.push("twitter")
   return providers
 }
+
+export const getGenericLoginType = () => siteConfig.auth.genericLoginType

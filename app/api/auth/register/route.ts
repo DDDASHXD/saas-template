@@ -1,11 +1,23 @@
 import { NextResponse } from "next/server"
 import bcrypt from "bcryptjs"
 
+import { siteConfig } from "@/config"
+import { sendAccountConfirmationEmail } from "@/lib/auth-emails"
+import { createEmailConfirmationToken } from "@/lib/auth-tokens"
+import { isValidEmail, normalizeEmail } from "@/lib/auth-validation"
+import { isResendConfigured } from "@/lib/email"
 import { getDb } from "@/lib/mongodb"
 
 export const POST = async (req: Request) => {
   try {
     const { name, email, password } = await req.json()
+
+    if (siteConfig.auth.genericLoginType !== "emailAndPassword") {
+      return NextResponse.json(
+        { error: "Email and password registration is disabled" },
+        { status: 400 }
+      )
+    }
 
     if (!name || !email || !password) {
       return NextResponse.json(
@@ -14,8 +26,15 @@ export const POST = async (req: Request) => {
       )
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
+    const normalizedName = String(name).trim()
+    if (!normalizedName) {
+      return NextResponse.json(
+        { error: "Name is required" },
+        { status: 400 }
+      )
+    }
+
+    if (!isValidEmail(email)) {
       return NextResponse.json(
         { error: "Invalid email format" },
         { status: 400 }
@@ -29,8 +48,9 @@ export const POST = async (req: Request) => {
       )
     }
 
+    const normalizedEmail = normalizeEmail(email)
     const db = await getDb()
-    const existingUser = await db.collection("users").findOne({ email })
+    const existingUser = await db.collection("users").findOne({ email: normalizedEmail })
 
     if (existingUser) {
       return NextResponse.json(
@@ -39,18 +59,52 @@ export const POST = async (req: Request) => {
       )
     }
 
+    if (siteConfig.auth.requireEmailConfirmation && !isResendConfigured()) {
+      return NextResponse.json(
+        { error: "RESEND_API_KEY is required when requireEmailConfirmation is enabled" },
+        { status: 503 }
+      )
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10)
 
     await db.collection("users").insertOne({
-      name,
-      email,
+      name: normalizedName,
+      email: normalizedEmail,
       password: hashedPassword,
-      emailVerified: null,
+      emailVerified: siteConfig.auth.requireEmailConfirmation ? null : new Date(),
       createdAt: new Date(),
     })
 
+    if (siteConfig.auth.requireEmailConfirmation) {
+      try {
+        const token = await createEmailConfirmationToken(normalizedEmail)
+        await sendAccountConfirmationEmail({
+          email: normalizedEmail,
+          token,
+        })
+      } catch {
+        return NextResponse.json(
+          {
+            error:
+              "Account was created, but confirmation email could not be sent. Please use resend confirmation on the sign-in page.",
+            accountCreated: true,
+          },
+          { status: 500 }
+        )
+      }
+
+      return NextResponse.json(
+        {
+          message: "User created. Please confirm your email before signing in.",
+          requiresEmailConfirmation: true,
+        },
+        { status: 201 }
+      )
+    }
+
     return NextResponse.json(
-      { message: "User created" },
+      { message: "User created", requiresEmailConfirmation: false },
       { status: 201 }
     )
   } catch {

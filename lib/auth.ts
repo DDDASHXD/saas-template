@@ -3,42 +3,150 @@ import { MongoDBAdapter } from "@auth/mongodb-adapter"
 import Credentials from "next-auth/providers/credentials"
 import bcrypt from "bcryptjs"
 
-import clientPromise, { getDb } from "@/lib/mongodb"
+import { siteConfig } from "@/config"
+import { consumeEmailOtp } from "@/lib/auth-tokens"
 import authConfig from "@/lib/auth.config"
+import clientPromise, { getDb } from "@/lib/mongodb"
+import { normalizeEmail } from "@/lib/auth-validation"
+
+interface AuthUserDocument {
+  _id: {
+    toString: () => string
+  }
+  name?: string | null
+  email?: string | null
+  image?: string | null
+  password?: string
+  emailVerified?: Date | null
+  createdAt?: Date
+  updatedAt?: Date
+}
+
+const getDefaultNameFromEmail = (email: string) => {
+  const [namePart] = email.split("@")
+  return namePart || "User"
+}
+
+const credentialsProvider = Credentials({
+  credentials: {
+    email: { label: "Email", type: "email" },
+    password: { label: "Password", type: "password" },
+    otp: { label: "One-time code", type: "text" },
+  },
+  async authorize(credentials) {
+    const rawEmail = credentials?.email as string | undefined
+    const email = rawEmail ? normalizeEmail(rawEmail) : ""
+
+    if (!email) {
+      return null
+    }
+
+    const db = await getDb()
+    const usersCollection = db.collection<AuthUserDocument>("users")
+
+    if (siteConfig.auth.genericLoginType === "emailOTP") {
+      const otp = (credentials?.otp as string | undefined)?.trim()
+
+      if (!otp || !/^\d{6}$/.test(otp)) {
+        return null
+      }
+
+      const isValidOtp = await consumeEmailOtp(email, otp)
+      if (!isValidOtp) {
+        return null
+      }
+
+      const existingUser = await usersCollection.findOne({ email })
+
+      if (!existingUser) {
+        const name = getDefaultNameFromEmail(email)
+        const createdUser = await usersCollection.insertOne({
+          name,
+          email,
+          image: null,
+          emailVerified: new Date(),
+          createdAt: new Date(),
+        })
+
+        return {
+          id: createdUser.insertedId.toString(),
+          name,
+          email,
+          image: null,
+        }
+      }
+
+      if (!existingUser.emailVerified) {
+        await usersCollection.updateOne(
+          { _id: existingUser._id },
+          { $set: { emailVerified: new Date() } }
+        )
+      }
+
+      return {
+        id: existingUser._id.toString(),
+        name: existingUser.name ?? getDefaultNameFromEmail(email),
+        email,
+        image: existingUser.image ?? null,
+      }
+    }
+
+    if (siteConfig.auth.genericLoginType !== "emailAndPassword") {
+      return null
+    }
+
+    const password = credentials?.password as string | undefined
+
+    if (!password) {
+      return null
+    }
+
+    const user = await usersCollection.findOne({ email })
+
+    if (!user || !user.password) {
+      return null
+    }
+
+    if (siteConfig.auth.requireEmailConfirmation && !user.emailVerified) {
+      return null
+    }
+
+    const isValidPassword = await bcrypt.compare(password, user.password)
+    if (!isValidPassword) {
+      return null
+    }
+
+    return {
+      id: user._id.toString(),
+      name: user.name,
+      email: user.email,
+      image: user.image ?? null,
+    }
+  },
+})
+
+const oauthProviders = authConfig.providers.filter(
+  (provider: { type?: string }) => provider.type !== "credentials"
+)
+
+const providers = [
+  ...(siteConfig.auth.genericLoginType !== "none" ? [credentialsProvider] : []),
+  ...oauthProviders,
+]
+
+if (providers.length === 0) {
+  providers.push(
+    Credentials({
+      credentials: {},
+      authorize() {
+        return null
+      },
+    })
+  )
+}
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   ...authConfig,
   adapter: MongoDBAdapter(clientPromise),
-  providers: [
-    Credentials({
-      credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials) {
-        const email = credentials?.email as string | undefined
-        const password = credentials?.password as string | undefined
-
-        if (!email || !password) return null
-
-        const db = await getDb()
-        const user = await db.collection("users").findOne({ email })
-
-        if (!user || !user.password) return null
-
-        const isValid = await bcrypt.compare(password, user.password)
-        if (!isValid) return null
-
-        return {
-          id: user._id.toString(),
-          name: user.name,
-          email: user.email,
-          image: user.image ?? null,
-        }
-      },
-    }),
-    ...authConfig.providers.filter(
-      (p: { type?: string }) => p.type !== "credentials"
-    ),
-  ],
+  providers,
 })

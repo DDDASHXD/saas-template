@@ -7,7 +7,9 @@ A production-ready SaaS starter template built with Next.js 16, React 19, and Ta
 - **Landing page** with responsive navigation, hero section, feature showcases, and footer
 - **Application shell** with collapsible sidebar, organization switcher, and user menu
 - **Authentication** via NextAuth v5 with email/password and optional OAuth (Google, GitHub, Discord, Twitter/X)
+- **Configurable authentication modes** (`emailAndPassword`, `emailOTP`, or `none`) plus optional required email confirmation
 - **MongoDB** integration with adapter for user storage
+- **Resend email support** for account confirmation, OTP sign-in, and password reset
 - **Centralized config** (`config.ts`) for site name, logos, navigation, footer, and sidebar items
 - **HugeIcons** icon system throughout
 - **Dark mode** support via CSS variables
@@ -63,6 +65,13 @@ Optional OAuth variables (leave empty to disable the provider on auth pages):
 | `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET`   | GitHub OAuth credentials    |
 | `DISCORD_CLIENT_ID` / `DISCORD_CLIENT_SECRET` | Discord OAuth credentials   |
 | `TWITTER_CLIENT_ID` / `TWITTER_CLIENT_SECRET` | Twitter/X OAuth credentials |
+
+Optional email delivery variables:
+
+| Variable             | Description                                                                 |
+| -------------------- | --------------------------------------------------------------------------- |
+| `RESEND_API_KEY`     | Required for email confirmation, email OTP sign-in, and password reset flow |
+| `RESEND_FROM_EMAIL`  | Optional sender address (defaults to `noreply@mail.skxv.dev`)               |
 
 ### Development
 
@@ -143,6 +152,9 @@ Edit `config.ts` to customize:
 - **Footer categories** with grouped links
 - **Social links** with platform-based icon mapping
 - **Dashboard sidebar** groups and items with HugeIcons
+- **Auth behavior**:
+  - `auth.requireEmailConfirmation`: require email confirmation before credentials sign-in
+  - `auth.genericLoginType`: `"emailAndPassword"`, `"emailOTP"`, or `"none"`
 
 ## Customization
 

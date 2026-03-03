@@ -78,7 +78,7 @@ export default {
       const isAuthenticated = !!auth?.user
 
       const protectedRoutes = ["/overview", "/documents", "/messages", "/guides", "/resources", "/projects"]
-      const authRoutes = ["/login", "/register"]
+      const authRoutes = ["/login", "/register", "/forgot-password", "/reset-password"]
       const { pathname } = nextUrl
 
       const isProtectedRoute = protectedRoutes.some(

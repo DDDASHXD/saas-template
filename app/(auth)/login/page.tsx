@@ -1,7 +1,8 @@
 import type { Metadata } from "next"
 
-import { getEnabledProviders } from "@/lib/auth-providers"
+import { siteConfig } from "@/config"
 import { LoginForm } from "@/components/auth/login-form"
+import { getEnabledProviders } from "@/lib/auth-providers"
 
 export const metadata: Metadata = {
   title: "Sign In",
@@ -10,7 +11,13 @@ export const metadata: Metadata = {
 const LoginPage = () => {
   const enabledProviders = getEnabledProviders()
 
-  return <LoginForm enabledProviders={enabledProviders} />
+  return (
+    <LoginForm
+      enabledProviders={enabledProviders}
+      genericLoginType={siteConfig.auth.genericLoginType}
+      requireEmailConfirmation={siteConfig.auth.requireEmailConfirmation}
+    />
+  )
 }
 
 export default LoginPage

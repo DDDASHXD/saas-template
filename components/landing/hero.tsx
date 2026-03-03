@@ -2,9 +2,9 @@ import Link from 'next/link'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
   ArrowRight01Icon,
-  UserGroupIcon,
-  SourceCodeIcon,
-  BubbleChatIcon,
+  UserShield01Icon,
+  SidebarLeftIcon,
+  DatabaseIcon,
 } from '@hugeicons/core-free-icons'
 
 import { cn } from '@/lib/utils'
@@ -21,51 +21,46 @@ const Hero = ({ className }: HeroProps) => {
       <div className="container">
         <div className="text-center">
           <a
-            href="#"
+            href="#features"
             className="mx-auto mb-3 inline-flex items-center gap-3 rounded-full border px-2 py-1 text-sm"
           >
-            <Badge className="rounded-full">NEW</Badge>
-            Introducing Collaboration 2.0
+            <Badge className="rounded-full">Next.js 16</Badge>
+            React 19 + Tailwind v4
             <span className="flex size-7 items-center justify-center rounded-full bg-muted">
               <HugeiconsIcon icon={ArrowRight01Icon} size={16} />
             </span>
           </a>
           <h1 className="mx-auto mt-4 mb-3 max-w-3xl text-4xl font-semibold text-balance lg:mb-7 lg:text-7xl">
-            Unlock the power of collaboration
+            Production-ready SaaS starter
           </h1>
           <p className="mx-auto max-w-3xl text-muted-foreground lg:text-xl">
-            Collaboration 2.0 is the ultimate platform for
-            <span className="relative top-[5px] mx-2 inline-flex font-medium text-primary md:top-[3px]">
-              <HugeiconsIcon icon={UserGroupIcon} size={20} className="mr-1" />
-              Teams
+            Ship faster with a template that includes
+            <span className="mx-2 inline-flex items-center gap-1 font-medium text-primary">
+              <HugeiconsIcon icon={UserShield01Icon} size={20} className="shrink-0" />
+              Auth,
             </span>
-            to
-            <span className="relative top-[5px] mx-2 inline-flex font-medium text-primary md:top-[3px]">
-              <HugeiconsIcon
-                icon={SourceCodeIcon}
-                size={20}
-                className="mr-1"
-              />
-              Collaborate,
+            <span className="mx-2 inline-flex items-center gap-1 font-medium text-primary">
+              <HugeiconsIcon icon={SidebarLeftIcon} size={20} className="shrink-0" />
+              Dashboard,
             </span>
-            <span className="relative top-[5px] mx-2 inline-flex font-medium text-primary md:top-[3px]">
-              <HugeiconsIcon
-                icon={BubbleChatIcon}
-                size={20}
-                className="mr-1"
-              />
-              Communicate,
+            <span className="mx-2 inline-flex items-center gap-1 font-medium text-primary">
+              <HugeiconsIcon icon={DatabaseIcon} size={20} className="shrink-0" />
+              MongoDB,
             </span>
-            and achieve their goals. Get a head start with our free plan. No
-            credit card required.
+            and more. Clone, configure, and launch.
           </p>
           <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
             <Button size="lg" nativeButton={false} render={<Link href="/register" />}>
-              Get started for free
+              Get started
               <HugeiconsIcon icon={ArrowRight01Icon} size={16} />
             </Button>
-            <Button size="lg" variant="ghost">
-              Learn more
+            <Button
+              size="lg"
+              variant="ghost"
+              nativeButton={false}
+              render={<Link href="#features" />}
+            >
+              View features
               <HugeiconsIcon icon={ArrowRight01Icon} size={16} />
             </Button>
           </div>

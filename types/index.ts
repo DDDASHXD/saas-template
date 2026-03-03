@@ -1,5 +1,7 @@
 import type { IconSvgElement } from "@hugeicons/react"
 
+export type GenericLoginType = "emailAndPassword" | "emailOTP" | "none"
+
 export interface NavLink {
   label: string
   href: string
@@ -41,6 +43,10 @@ export interface SiteConfig {
   name: string
   description: string
   url: string
+  auth: {
+    requireEmailConfirmation: boolean
+    genericLoginType: GenericLoginType
+  }
   logo: {
     full: string
     icon: string

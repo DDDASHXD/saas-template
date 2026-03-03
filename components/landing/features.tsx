@@ -8,16 +8,16 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import type { IconSvgElement } from '@hugeicons/react'
 import {
   ArrowRight01Icon,
-  Clock01Icon,
-  CleanIcon,
-  GlobeIcon,
-  Message01Icon,
-  Plug01Icon,
+  DatabaseExportIcon,
+  IconjarIcon,
+  Key01Icon,
+  Layout01Icon,
+  Moon01Icon,
+  PanelLeftIcon,
   SecurityCheckIcon,
   Settings02Icon,
   SourceCodeIcon,
   UserGroupIcon,
-  ZapIcon,
 } from '@hugeicons/core-free-icons'
 
 import { cn } from '@/lib/utils'
@@ -31,34 +31,44 @@ const gridItems: {
   icon: IconSvgElement
 }[] = [
   {
-    title: 'Plug & Play',
-    description: 'Ready to use components that work out of the box with no configuration needed.',
-    icon: Plug01Icon,
+    title: 'Landing Page',
+    description: 'Responsive navigation, hero section, feature showcases, and footer out of the box.',
+    icon: Layout01Icon,
   },
   {
-    title: 'Customizable',
-    description: 'Fully customizable components with clean, maintainable code structure.',
-    icon: SourceCodeIcon,
+    title: 'Application Shell',
+    description: 'Collapsible sidebar, organization switcher, and user menu for your dashboard.',
+    icon: PanelLeftIcon,
   },
   {
-    title: 'Design Control',
-    description: 'Complete control over styling and animations with modern design patterns.',
+    title: 'Authentication',
+    description: 'NextAuth v5 with email/password and optional OAuth (Google, GitHub, Discord, Twitter/X).',
+    icon: SecurityCheckIcon,
+  },
+  {
+    title: 'MongoDB',
+    description: 'MongoDB integration with adapter for user storage and session management.',
+    icon: DatabaseExportIcon,
+  },
+  {
+    title: 'Centralized Config',
+    description: 'Single config.ts for site name, logos, navigation, footer, and sidebar items.',
     icon: Settings02Icon,
   },
   {
-    title: 'Regular Updates',
-    description: 'Continuously updated with new features, improvements and fixes.',
-    icon: Clock01Icon,
+    title: 'HugeIcons',
+    description: '46,000+ icons throughout the template with tree-shakable imports.',
+    icon: IconjarIcon,
   },
   {
-    title: 'Clean Code',
-    description: 'Well-structured, readable code following industry best practices.',
-    icon: CleanIcon,
+    title: 'Dark Mode',
+    description: 'Dark mode support via CSS variables and system preference detection.',
+    icon: Moon01Icon,
   },
   {
-    title: 'Performance',
-    description: 'Optimized for speed and efficiency without compromising functionality.',
-    icon: ZapIcon,
+    title: 'TypeScript',
+    description: 'TypeScript with strict mode for type-safe development.',
+    icon: SourceCodeIcon,
   },
 ]
 
@@ -74,10 +84,10 @@ const FeaturesGrid = ({ className }: FeaturesGridProps) => {
       <div className="container flex w-full flex-col items-center justify-center px-4">
         <p className="rounded-full bg-muted px-4 py-1 text-xs uppercase">Features</p>
         <h2 className="relative z-20 py-2 text-center font-sans text-5xl font-semibold tracking-tighter md:py-7 lg:text-6xl">
-          Everything You Need
+          Production-ready out of the box
         </h2>
         <p className="text-md mx-auto max-w-xl text-center text-muted-foreground lg:text-lg">
-          Perfectly balanced between performance and customization.
+          Next.js 16, React 19, Tailwind v4, shadcn/ui, and more.
         </p>
 
         <div className="relative mt-10 grid w-full max-w-4xl grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
@@ -125,44 +135,44 @@ const carouselItems: {
   icon: IconSvgElement
 }[] = [
   {
-    title: 'Enterprise Security',
-    description: 'Bank-grade encryption and security protocols for your data.',
-    icon: SecurityCheckIcon,
-  },
-  {
-    title: 'Global CDN',
-    description: 'Lightning-fast delivery across the globe with our CDN.',
-    icon: GlobeIcon,
-  },
-  {
-    title: 'Open Source',
-    description: 'Built on open standards with a transparent codebase.',
+    title: 'Next.js 16',
+    description: 'App Router, server components, and the latest Next.js features.',
     icon: SourceCodeIcon,
   },
   {
-    title: 'Configurable',
-    description: 'Fine-tune every aspect to match your workflow.',
+    title: 'React 19',
+    description: 'Latest React with improved performance and concurrent features.',
+    icon: SourceCodeIcon,
+  },
+  {
+    title: 'Tailwind CSS v4',
+    description: 'Utility-first styling with the newest Tailwind release.',
     icon: Settings02Icon,
   },
   {
-    title: 'Blazing Fast',
-    description: 'Optimized performance that scales with your needs.',
-    icon: ZapIcon,
+    title: 'shadcn/ui',
+    description: 'Base UI primitives for accessible, customizable components.',
+    icon: Layout01Icon,
   },
   {
-    title: '24/7 Support',
-    description: 'Dedicated support team always ready to help.',
-    icon: Message01Icon,
+    title: 'NextAuth v5',
+    description: 'Auth.js with email/password and OAuth providers.',
+    icon: Key01Icon,
   },
   {
-    title: 'Team Collaboration',
-    description: 'Real-time collaboration tools for your entire team.',
+    title: 'Framer Motion',
+    description: 'Smooth animations and transitions throughout.',
+    icon: SourceCodeIcon,
+  },
+  {
+    title: 'Organization Switcher',
+    description: 'Multi-tenant support with org switcher in the shell.',
     icon: UserGroupIcon,
   },
   {
-    title: 'Reliable Uptime',
-    description: '99.9% uptime guarantee with redundant infrastructure.',
-    icon: Clock01Icon,
+    title: 'OAuth Providers',
+    description: 'Google, GitHub, Discord, and Twitter/X ready to configure.',
+    icon: SecurityCheckIcon,
   },
 ]
 
@@ -197,10 +207,10 @@ const FeaturesCarousel = ({ className }: FeaturesCarouselProps) => {
               </Avatar>
             </span>
             <h2 className="text-3xl font-semibold md:text-5xl">
-              Explore New Frontiers in Digital Innovation
+              Modern tech stack, zero setup
             </h2>
             <p className="text-muted-foreground md:text-lg">
-              Join our journey to craft highly optimized web experiences.
+              Clone, configure config.ts, add your MongoDB URI, and ship.
             </p>
             <Button
               size="lg"
@@ -208,17 +218,17 @@ const FeaturesCarousel = ({ className }: FeaturesCarouselProps) => {
               nativeButton={false}
               render={<Link href="/register" />}
             >
-              View Features
+              Get started
               <HugeiconsIcon icon={ArrowRight01Icon} size={16} />
             </Button>
             <div className="grid grid-cols-2 justify-between gap-4 pt-10 text-left md:gap-20">
               <div className="flex flex-col gap-1">
-                <h3 className="text-3xl font-semibold md:text-5xl">85%</h3>
-                <p className="text-muted-foreground md:text-lg">Conversion boost</p>
+                <h3 className="text-3xl font-semibold md:text-5xl">8+</h3>
+                <p className="text-muted-foreground md:text-lg">Built-in features</p>
               </div>
               <div className="flex flex-col gap-1">
-                <h3 className="text-3xl font-semibold md:text-5xl">25k+</h3>
-                <p className="text-muted-foreground md:text-lg">Happy Customers</p>
+                <h3 className="text-3xl font-semibold md:text-5xl">MIT</h3>
+                <p className="text-muted-foreground md:text-lg">License</p>
               </div>
             </div>
           </div>
