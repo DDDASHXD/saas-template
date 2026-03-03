@@ -19,21 +19,12 @@ export const roles = [
     name: 'Admin',
     id: 'admin',
     permissions: ['*'],
-    nonPermissions: [
-      'organization.delete',
-      'organization.members.role.update',
-      'organization.members.kick',
-    ],
+    nonPermissions: ['organization.delete'],
   },
   {
     name: 'Member',
     id: 'member',
     permissions: ['example.permission', 'organization.leave'],
-  },
-  {
-    name: 'Test',
-    id: 'testRole',
-    permissions: ['*'],
   },
 ] as const satisfies readonly RoleDefinition[]
 
@@ -48,7 +39,7 @@ export const isRoleId = (roleId: string): roleId is RoleId => roleIdSet.has(role
 export const getRoleIds = () => roles.map((role) => role.id)
 
 export const getInvitableRoleIds = () =>
-  roles.filter((role) => role.id !== "owner").map((role) => role.id)
+  roles.filter((role) => role.id !== 'owner').map((role) => role.id)
 
 export const hasRolePermission = (
   roleId: RoleId | null | undefined,
