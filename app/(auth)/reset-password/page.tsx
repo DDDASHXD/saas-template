@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { Suspense } from "react"
 
 import { ResetPasswordForm } from "@/components/auth/reset-password-form"
 
@@ -7,7 +8,11 @@ export const metadata: Metadata = {
 }
 
 const ResetPasswordPage = () => {
-  return <ResetPasswordForm />
+  return (
+    <Suspense>
+      <ResetPasswordForm />
+    </Suspense>
+  )
 }
 
 export default ResetPasswordPage

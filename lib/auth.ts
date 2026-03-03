@@ -10,7 +10,7 @@ import clientPromise, { getDb } from "@/lib/mongodb"
 import { normalizeEmail } from "@/lib/auth-validation"
 
 interface AuthUserDocument {
-  _id: {
+  _id?: {
     toString: () => string
   }
   name?: string | null
@@ -84,7 +84,7 @@ const credentialsProvider = Credentials({
       }
 
       return {
-        id: existingUser._id.toString(),
+        id: existingUser._id!.toString(),
         name: existingUser.name ?? getDefaultNameFromEmail(email),
         email,
         image: existingUser.image ?? null,
@@ -117,7 +117,7 @@ const credentialsProvider = Credentials({
     }
 
     return {
-      id: user._id.toString(),
+      id: user._id!.toString(),
       name: user.name,
       email: user.email,
       image: user.image ?? null,

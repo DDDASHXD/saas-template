@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { Suspense } from "react"
 
 import { siteConfig } from "@/config"
 import { LoginForm } from "@/components/auth/login-form"
@@ -12,11 +13,13 @@ const LoginPage = () => {
   const enabledProviders = getEnabledProviders()
 
   return (
-    <LoginForm
-      enabledProviders={enabledProviders}
-      genericLoginType={siteConfig.auth.genericLoginType}
-      requireEmailConfirmation={siteConfig.auth.requireEmailConfirmation}
-    />
+    <Suspense>
+      <LoginForm
+        enabledProviders={enabledProviders}
+        genericLoginType={siteConfig.auth.genericLoginType}
+        requireEmailConfirmation={siteConfig.auth.requireEmailConfirmation}
+      />
+    </Suspense>
   )
 }
 
