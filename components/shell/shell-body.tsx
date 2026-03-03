@@ -4,8 +4,8 @@ import { cn } from '@/lib/utils'
 
 const ShellBody = ({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) => {
   return (
-    <div className={cn('flex flex-1 flex-col gap-4 p-4 md:p-6 pt-0!', className)} {...props}>
-      <div className="">{children}</div>
+    <div className="flex flex-1 overflow-auto overscroll-none p-4 pt-0 md:p-6 md:pt-0" {...props}>
+      <div className={cn('flex w-full flex-1 flex-col gap-6', className)}>{children}</div>
     </div>
   )
 }

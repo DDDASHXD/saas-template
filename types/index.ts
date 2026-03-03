@@ -23,6 +23,13 @@ export interface SidebarItem {
   icon: IconSvgElement
 }
 
+export type DashboardRailItemType = "default" | "mdx"
+
+export interface DashboardRailItem extends SidebarItem {
+  type: DashboardRailItemType
+  folder?: string
+}
+
 export interface SidebarGroup {
   label?: string
   items: SidebarItem[]
@@ -58,7 +65,7 @@ export interface SiteConfig {
   }
   dashboard: {
     sidebar: {
-      items: SidebarItem[]
+      items: DashboardRailItem[]
       utilities: SidebarItem[]
     }
     settings: SettingsSection[]

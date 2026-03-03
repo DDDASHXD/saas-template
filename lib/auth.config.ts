@@ -77,7 +77,19 @@ export default {
     authorized({ auth, request: { nextUrl } }) {
       const isAuthenticated = !!auth?.user
 
-      const protectedRoutes = ["/overview", "/documents", "/messages", "/guides", "/resources", "/projects"]
+      const protectedRoutes = [
+        "/overview",
+        "/lists",
+        "/tables",
+        "/documentation",
+        "/documents",
+        "/messages",
+        "/guides",
+        "/resources",
+        "/projects",
+        "/pages",
+        "/docs",
+      ]
       const authRoutes = ["/login", "/register", "/forgot-password", "/reset-password"]
       const { pathname } = nextUrl
 

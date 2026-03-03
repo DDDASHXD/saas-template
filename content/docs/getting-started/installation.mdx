@@ -1,0 +1,28 @@
+---
+title: Installation
+description: Local setup for development and production builds.
+---
+
+# Installation
+
+Install dependencies and start the development server:
+
+```bash
+pnpm install
+pnpm dev
+```
+
+## Environment Variables
+
+Create `.env.local` from `.env.example`, then add auth and database values.
+
+## Production Build
+
+```bash
+pnpm build
+pnpm start
+```
+
+### Common Pitfall
+
+If build output warns about multiple lockfiles, set `turbopack.root` in Next config.

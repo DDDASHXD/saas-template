@@ -1,4 +1,5 @@
 import {
+  BookOpen01Icon,
   DocumentAttachmentIcon,
   HelpCircleIcon,
   Home01Icon,
@@ -14,6 +15,8 @@ import {
   UserSettingsIcon,
   DatabaseExportIcon,
   CoinsDollarIcon,
+  File02Icon,
+  Github,
 } from '@hugeicons/core-free-icons'
 
 import type { SiteConfig } from '@/types'
@@ -78,8 +81,22 @@ export const siteConfig: SiteConfig = {
   dashboard: {
     sidebar: {
       items: [
-        { title: 'Home', href: '/overview', icon: Home01Icon },
-        { title: 'Projects', href: '/projects', icon: DocumentAttachmentIcon },
+        { title: 'Home', href: '/overview', icon: Home01Icon, type: 'default' },
+        { title: 'Projects', href: '/projects', icon: DocumentAttachmentIcon, type: 'default' },
+        { title: 'Pages', href: '/pages', icon: File02Icon, type: 'default' },
+        {
+          title: 'Docs',
+          href: '/docs',
+          icon: BookOpen01Icon,
+          type: 'mdx',
+          folder: '/content/docs',
+        },
+        {
+          title: 'View on GitHub',
+          href: 'https://github.com/DDDASHXD/saas-template',
+          icon: Github,
+          type: 'default',
+        },
       ],
       utilities: [{ title: 'Help & Support', href: '/help', icon: HelpCircleIcon }],
     },

@@ -1,0 +1,24 @@
+---
+title: Authentication
+description: Configure credentials login, OAuth providers, and route protection.
+---
+
+# Authentication
+
+Authentication is configured in `lib/auth.config.ts` and `lib/auth.ts`.
+
+## Credentials
+
+Use email/password mode when you need classic account auth and password reset.
+
+## OAuth Providers
+
+Enable providers by setting environment variables:
+
+- `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`
+- `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`
+- `DISCORD_CLIENT_ID` and `DISCORD_CLIENT_SECRET`
+
+## Protected Routes
+
+Update `protectedRoutes` to include any new dashboard sections.

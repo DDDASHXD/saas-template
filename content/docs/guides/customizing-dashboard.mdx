@@ -1,0 +1,23 @@
+---
+title: Customizing The Dashboard
+description: Extend the shell while preserving the existing visual system.
+---
+
+# Customizing The Dashboard
+
+Use shared shell primitives for consistency.
+
+## Layout Strategy
+
+Every route group should define:
+
+1. A `layout.tsx` with `Shell`, `ShellSidebar`, and `ShellContent`
+2. Page files that use `ShellContentHeader` and `ShellBody`
+
+## Spacing
+
+`ShellBody` defines the core spacing rhythm. Prefer local overrides only for exceptional pages.
+
+## Navigation
+
+Keep rail items in `config.ts` and keep inner nav group-specific.

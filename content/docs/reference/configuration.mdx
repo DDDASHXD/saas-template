@@ -1,0 +1,23 @@
+---
+title: Configuration
+description: Site and dashboard config reference.
+---
+
+# Configuration
+
+Core configuration is centralized in `config.ts`.
+
+## Rail Items
+
+Each rail item supports:
+
+- `type: "default" | "mdx"`
+- `folder` when type is `mdx`
+
+## MDX Mapping
+
+When an item is `mdx`, the app scans its folder recursively and maps files to routes.
+
+### Example
+
+`content/docs/getting-started/installation.mdx` maps to `/docs/getting-started/installation`.

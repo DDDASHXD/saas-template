@@ -3,7 +3,28 @@ import {
   ShellContentHeader,
   ShellContentHeaderDescription,
   ShellContentHeaderTitle,
-} from "@/components/shell"
+} from '@/components/shell'
+
+const guides = [
+  {
+    title: 'Getting started with workspaces',
+    description: 'Set up your first workspace, invite teammates, and configure roles.',
+    duration: '8 min read',
+    level: 'Beginner',
+  },
+  {
+    title: 'Shipping feature flags safely',
+    description: 'Roll out high-risk features with canaries and metrics gating.',
+    duration: '11 min read',
+    level: 'Intermediate',
+  },
+  {
+    title: 'Billing operations handbook',
+    description: 'Handle failed payments, retries, and account recovery flows.',
+    duration: '14 min read',
+    level: 'Advanced',
+  },
+]
 
 const GuidesPage = () => {
   return (
@@ -14,10 +35,23 @@ const GuidesPage = () => {
           Browse tutorials and getting started guides
         </ShellContentHeaderDescription>
       </ShellContentHeader>
-      <ShellBody>
-        <p className="text-muted-foreground">
-          Your guides will appear here.
-        </p>
+      <ShellBody className="gap-8">
+        <section className="space-y-3">
+          <h2 className="text-sm font-semibold">Featured</h2>
+          {guides.map((guide) => (
+            <article
+              key={guide.title}
+              className="rounded-xl border border-border/70 bg-[var(--shell-panel)] p-5"
+            >
+              <div className="flex items-center justify-between gap-4">
+                <h3 className="text-base font-semibold">{guide.title}</h3>
+                <p className="text-xs text-muted-foreground">{guide.duration}</p>
+              </div>
+              <p className="mt-2 text-sm text-muted-foreground">{guide.description}</p>
+              <p className="mt-3 text-xs text-muted-foreground">{guide.level}</p>
+            </article>
+          ))}
+        </section>
       </ShellBody>
     </>
   )
