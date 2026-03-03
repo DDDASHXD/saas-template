@@ -1,18 +1,14 @@
-"use client"
+'use client'
 
-import * as React from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { HugeiconsIcon } from "@hugeicons/react"
-import {
-  Notification03Icon,
-  ArrowDown01Icon,
-  PlusSignIcon,
-} from "@hugeicons/core-free-icons"
+import * as React from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { Notification03Icon, ArrowDown01Icon, PlusSignIcon } from '@hugeicons/core-free-icons'
 
-import { cn } from "@/lib/utils"
-import { siteConfig } from "@/config"
-import { Button } from "@/components/ui/button"
+import { cn } from '@/lib/utils'
+import { siteConfig } from '@/config'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,9 +17,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { useSidebar } from "./shell-context"
+} from '@/components/ui/dropdown-menu'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { useSidebar } from './shell-context'
 
 const SIDEBAR_WIDTH = 240
 
@@ -35,12 +31,14 @@ const ShellSidebar = ({ children }: { children: React.ReactNode }) => {
     <aside
       className="sticky top-0 z-40 hidden h-screen transition-[width] duration-300 md:block"
       style={{ width: isPanelOpen ? SIDEBAR_WIDTH : 0 }}
-      data-panel-state={isPanelOpen ? "expanded" : "collapsed"}
+      data-panel-state={isPanelOpen ? 'expanded' : 'collapsed'}
     >
       <div
         className={cn(
-          "relative size-full overflow-hidden py-2 transition-opacity duration-300",
-          !isPanelOpen && "opacity-0",
+          'relative size-full overflow-hidden py-2 transition-all duration-300',
+          isPanelOpen
+            ? 'scale-100 opacity-100 translate-x-0 blur-none'
+            : 'origin-left scale-95 opacity-0 translate-x-6 blur-sm',
         )}
       >
         <div
@@ -82,19 +80,16 @@ const SidebarUtilities = () => {
             key={item.href}
             href={item.href}
             className={cn(
-              "flex h-8 items-center gap-2.5 rounded-lg px-2 text-sm transition-colors duration-75",
+              'flex h-8 items-center gap-2.5 rounded-lg px-2 text-sm transition-colors duration-75',
               isActive
-                ? "bg-primary/10 font-medium text-primary hover:bg-primary/15"
-                : "text-foreground hover:bg-accent active:bg-accent/80",
+                ? 'bg-primary/10 font-medium text-primary hover:bg-primary/15'
+                : 'text-foreground hover:bg-accent active:bg-accent/80',
             )}
           >
             <HugeiconsIcon
               icon={item.icon}
               size={16}
-              className={cn(
-                "shrink-0",
-                isActive ? "text-primary" : "text-muted-foreground",
-              )}
+              className={cn('shrink-0', isActive ? 'text-primary' : 'text-muted-foreground')}
             />
             <span className="truncate">{item.title}</span>
           </Link>
@@ -115,11 +110,7 @@ const OrganizationSwitcher = () => {
         <span className="flex-1 truncate text-sm font-medium text-foreground">
           {siteConfig.name}
         </span>
-        <HugeiconsIcon
-          icon={ArrowDown01Icon}
-          size={16}
-          className="text-muted-foreground"
-        />
+        <HugeiconsIcon icon={ArrowDown01Icon} size={16} className="text-muted-foreground" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-56">
         <DropdownMenuGroup>
