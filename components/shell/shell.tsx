@@ -18,7 +18,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Separator } from "@/components/ui/separator"
 import { SettingsProvider, SettingsModal, useSettings } from "@/components/settings"
 import { useUser } from "@/hooks/use-user"
 import type { InitialOrganizationData } from "@/lib/organizations"
@@ -49,10 +48,6 @@ const Shell = ({
           >
             <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4 md:hidden">
               <MobileSidebarButton />
-              <Separator
-                orientation="vertical"
-                className="data-[orientation=vertical]:h-4"
-              />
               <Link href="/" className="flex items-center gap-2">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-sm bg-primary">
                   <img
@@ -62,10 +57,6 @@ const Shell = ({
                   />
                 </div>
               </Link>
-              <Separator
-                orientation="vertical"
-                className="data-[orientation=vertical]:h-4"
-              />
               <div className="min-w-0 shrink text-sm font-medium truncate">
                 {siteConfig.name}
               </div>

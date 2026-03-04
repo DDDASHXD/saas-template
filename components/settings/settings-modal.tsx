@@ -79,10 +79,13 @@ const SettingsModal = () => {
         <DialogOverlay className="data-closed:animate-none" />
         <DialogPrimitive.Popup
           data-slot="dialog-content"
-          className="fixed top-1/2 left-1/2 z-50 w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-xl text-sm ring-1 ring-foreground/10 outline-none sm:max-w-3xl md:max-w-4xl data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95"
+          className="fixed top-1/2 left-1/2 z-50 w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[var(--settings-shell-radius)] text-sm ring-1 ring-foreground/10 outline-none sm:max-w-3xl md:max-w-4xl data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95"
           style={
             {
               '--settings-chrome': 'color-mix(in oklch, var(--background) 95%, var(--foreground))',
+              '--settings-shell-radius': '1.5rem',
+              '--settings-shell-pad': '0.5rem',
+              '--settings-inner-radius': 'calc(var(--settings-shell-radius) - var(--settings-shell-pad))',
             } as React.CSSProperties
           }
         >
@@ -172,8 +175,8 @@ const SettingsModal = () => {
               </ScrollArea>
             </aside>
 
-            <div className="flex min-h-0 flex-col p-2 pl-0 sm:pl-0">
-              <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border bg-background">
+            <div className="flex min-h-0 flex-col p-[var(--settings-shell-pad)] sm:pl-0">
+              <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-[var(--settings-inner-radius)] border bg-background">
                 <div className="flex shrink-0 items-center justify-between border-b px-5 py-3">
                   <DialogTitle className="text-base font-medium">{title}</DialogTitle>
                   <DialogPrimitive.Close
