@@ -170,6 +170,23 @@ Examples:
 - `content/docs/getting-started/index.mdx` -> `/docs/getting-started`
 - `content/docs/getting-started/installation.mdx` -> `/docs/getting-started/installation`
 
+## Navigation Performance for Dynamic Routes
+
+For routes that do server work (permission checks, org context lookups, MDX filesystem reads), use these patterns to keep navigation responsive:
+
+1. Add a route-level loading boundary (`loading.tsx`) beside the route segment.
+2. Fetch permission/org context once per page and derive multiple checks from that single context.
+3. Keep shared server context helpers request-cached with React `cache(...)` when reused within a render.
+
+Examples in this template:
+
+- `app/(dashboard)/(home)/permission-routes/loading.tsx`
+- `app/(dashboard)/(home)/permissions-lab/loading.tsx`
+- `app/(dashboard)/(docs)/loading.tsx`
+- `lib/organization-access.ts` (`getServerPermissionContext` is request-cached)
+
+Without a `loading.tsx` boundary, users may perceive a delay before route transition appears, especially in production/serverless environments.
+
 ## Where Navigation Comes From
 
 - Rail icons (left thin column): `config.ts` -> `dashboard.sidebar.items`

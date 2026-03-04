@@ -1,5 +1,7 @@
 import "server-only"
 
+import { cache } from "react"
+
 import type { PermissionId } from "@/permissions"
 import { hasRolePermission } from "@/roles"
 
@@ -19,7 +21,7 @@ interface ServerPermissionContext {
   isHomeOrganization: boolean
 }
 
-const getServerPermissionContext = async (): Promise<ServerPermissionContext> => {
+const getServerPermissionContext = cache(async (): Promise<ServerPermissionContext> => {
   const session = await auth()
 
   if (!session?.user?.id) {
@@ -43,7 +45,7 @@ const getServerPermissionContext = async (): Promise<ServerPermissionContext> =>
     isAuthenticated: true,
     isHomeOrganization: state.isHomeForCurrentUser,
   }
-}
+})
 
 const hasServerPermission = async (permissionId: PermissionId) => {
   const context = await getServerPermissionContext()

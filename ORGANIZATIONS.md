@@ -264,6 +264,16 @@ Behavior:
 
 Use these patterns for future permission-gated sections.
 
+## Performance pattern for permission pages
+
+When a permission page performs multiple checks, avoid repeated server context fetches:
+
+1. Read context once with `getServerPermissionContext()`.
+2. Derive all permission results with `hasRolePermission(context.role, permissionId)`.
+3. Keep `getServerPermissionContext` request-cached (React `cache`) in `lib/organization-access.ts`.
+
+For better transition UX, add `loading.tsx` to permission-heavy route segments so navigation can show immediate loading UI while server checks resolve.
+
 ---
 
 ## API Endpoints Summary
@@ -311,4 +321,3 @@ Notifications:
 3. Never allow leaving/kicking home org membership.
 4. Prefer permission checks over role-name checks.
 5. Keep `notifications` (shared content) and `notification_deliveries` (per-user state) split.
-

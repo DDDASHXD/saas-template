@@ -7,16 +7,16 @@ import {
   ShellContentHeaderTitle,
 } from "@/components/shell"
 import { Badge } from "@/components/ui/badge"
-import { hasServerPermission } from "@/lib/organization-access"
+import { getServerPermissionContext } from "@/lib/organization-access"
 import { permissionRoutes } from "@/lib/permission-routes"
+import { hasRolePermission } from "@/roles"
 
 const PermissionRoutesPage = async () => {
-  const evaluations = await Promise.all(
-    permissionRoutes.map(async (route) => ({
-      route,
-      allowed: await hasServerPermission(route.permissionId),
-    }))
-  )
+  const context = await getServerPermissionContext()
+  const evaluations = permissionRoutes.map((route) => ({
+    route,
+    allowed: hasRolePermission(context.role, route.permissionId),
+  }))
 
   return (
     <>
