@@ -55,6 +55,7 @@ export interface SiteConfig {
   auth: {
     requireEmailConfirmation: boolean
     genericLoginType: GenericLoginType
+    disableRegistration: boolean
   }
   logo: {
     full: string

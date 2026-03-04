@@ -58,7 +58,7 @@ const PermissionsLabClient = ({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         <Button
           variant={activeTab === "server" ? "default" : "outline"}
           onClick={() => setActiveTab("server")}
@@ -74,7 +74,7 @@ const PermissionsLabClient = ({
       </div>
 
       {activeTab === "server" ? (
-        <section className="rounded-xl border bg-[var(--shell-panel)] p-5">
+        <section className="rounded-xl border bg-[var(--shell-panel)] p-4 sm:p-5">
           <div className="mb-4">
             <h2 className="text-sm font-semibold">Server permission context</h2>
             <p className="text-xs text-muted-foreground">
@@ -82,8 +82,8 @@ const PermissionsLabClient = ({
             </p>
           </div>
 
-          <div className="overflow-hidden rounded-lg border">
-            <table className="w-full text-sm">
+          <div className="overflow-x-auto rounded-lg border">
+            <table className="w-full min-w-[680px] text-sm">
               <thead className="bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
                 <tr>
                   <th className="px-4 py-2">Permission</th>
@@ -118,7 +118,7 @@ const PermissionsLabClient = ({
           </div>
         </section>
       ) : (
-        <section className="rounded-xl border bg-[var(--shell-panel)] p-5">
+        <section className="rounded-xl border bg-[var(--shell-panel)] p-4 sm:p-5">
           <div className="mb-4">
             <h2 className="text-sm font-semibold">Client permission checks</h2>
             <p className="text-xs text-muted-foreground">
@@ -126,8 +126,8 @@ const PermissionsLabClient = ({
             </p>
           </div>
 
-          <div className="overflow-hidden rounded-lg border">
-            <table className="w-full text-sm">
+          <div className="overflow-x-auto rounded-lg border">
+            <table className="w-full min-w-[680px] text-sm">
               <thead className="bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
                 <tr>
                   <th className="px-4 py-2">Permission</th>

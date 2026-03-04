@@ -66,6 +66,10 @@ const credentialsProvider = Credentials({
       const existingUser = await usersCollection.findOne({ email })
 
       if (!existingUser) {
+        if (siteConfig.auth.disableRegistration) {
+          return null
+        }
+
         const name = getDefaultNameFromEmail(email)
         const now = new Date()
         const createdUser = await usersCollection.insertOne({
@@ -182,6 +186,10 @@ const baseAdapter = MongoDBAdapter(clientPromise) as Adapter
 const adapter: Adapter = {
   ...baseAdapter,
   async createUser(data: AdapterUser) {
+    if (siteConfig.auth.disableRegistration) {
+      throw new Error("Registration is disabled")
+    }
+
     const user = await baseAdapter.createUser!(data)
 
     const db = await getDb()

@@ -17,6 +17,7 @@ interface RegisterFormProps {
   enabledProviders: string[]
   genericLoginType: GenericLoginType
   requireEmailConfirmation: boolean
+  disableRegistration: boolean
 }
 
 const providerConfig: Record<string, { label: string; icon: React.ReactNode }> = {
@@ -66,6 +67,7 @@ const RegisterForm = ({
   enabledProviders,
   genericLoginType,
   requireEmailConfirmation,
+  disableRegistration,
 }: RegisterFormProps) => {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -152,7 +154,7 @@ const RegisterForm = ({
         </div>
       )}
 
-      {genericLoginType === "emailAndPassword" ? (
+      {!disableRegistration && genericLoginType === "emailAndPassword" ? (
         <form onSubmit={handleSubmit} className="flex w-full flex-col gap-4">
           <div className="flex flex-col gap-2">
             <Label htmlFor="name">Name</Label>
@@ -200,13 +202,15 @@ const RegisterForm = ({
         </form>
       ) : (
         <div className="w-full rounded-lg border border-border bg-muted/30 px-4 py-3 text-sm text-muted-foreground">
-          {genericLoginType === "emailOTP"
+          {disableRegistration
+            ? "Registration is disabled. Contact support if you need an account."
+            : genericLoginType === "emailOTP"
             ? "Email/password sign-up is disabled. Use the email code flow on the sign-in page."
             : "Direct email sign-up is disabled. Use an OAuth provider to continue."}
         </div>
       )}
 
-      {enabledProviders.length > 0 && (
+      {!disableRegistration && enabledProviders.length > 0 && (
         <>
           <div className="flex w-full items-center gap-4">
             <div className="h-px flex-1 bg-border" />

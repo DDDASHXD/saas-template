@@ -5,6 +5,7 @@ import { sendEmailOtpCode } from "@/lib/auth-emails"
 import { createEmailOtp } from "@/lib/auth-tokens"
 import { isValidEmail, normalizeEmail } from "@/lib/auth-validation"
 import { isResendConfigured } from "@/lib/email"
+import { getDb } from "@/lib/mongodb"
 
 export const POST = async (req: Request) => {
   try {
@@ -32,6 +33,19 @@ export const POST = async (req: Request) => {
     }
 
     const normalizedEmail = normalizeEmail(email)
+
+    if (siteConfig.auth.disableRegistration) {
+      const db = await getDb()
+      const existingUser = await db.collection("users").findOne({ email: normalizedEmail })
+
+      if (!existingUser) {
+        return NextResponse.json(
+          { error: "sorry, registration is currently disabled." },
+          { status: 403 }
+        )
+      }
+    }
+
     const otp = await createEmailOtp(normalizedEmail)
     await sendEmailOtpCode({
       email: normalizedEmail,

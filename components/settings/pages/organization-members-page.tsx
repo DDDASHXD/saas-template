@@ -213,8 +213,8 @@ const OrganizationMembersPage = () => {
 
       <div className="grid gap-3">
         <h3 className="text-sm font-medium">Current members</h3>
-        <div className="overflow-hidden rounded-lg border">
-          <table className="w-full text-sm">
+        <div className="overflow-x-auto rounded-lg border">
+          <table className="w-full min-w-[720px] text-sm">
             <thead className="bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
               <tr>
                 <th className="px-4 py-2">Name</th>
@@ -295,8 +295,8 @@ const OrganizationMembersPage = () => {
 
       <div className="grid gap-3">
         <h3 className="text-sm font-medium">Invitations</h3>
-        <div className="overflow-hidden rounded-lg border">
-          <table className="w-full text-sm">
+        <div className="overflow-x-auto rounded-lg border">
+          <table className="w-full min-w-[720px] text-sm">
             <thead className="bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
               <tr>
                 <th className="px-4 py-2">Email</th>
@@ -355,7 +355,7 @@ const OrganizationMembersPage = () => {
 
       <Separator />
 
-      <div className="flex items-center justify-between rounded-lg border border-destructive/20 bg-destructive/5 px-4 py-3">
+      <div className="flex flex-col gap-3 rounded-lg border border-destructive/20 bg-destructive/5 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-sm font-medium text-destructive">Leave organization</p>
           <p className="text-xs text-muted-foreground">

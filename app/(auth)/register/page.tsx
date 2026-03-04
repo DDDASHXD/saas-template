@@ -18,6 +18,7 @@ const RegisterPage = () => {
         enabledProviders={enabledProviders}
         genericLoginType={siteConfig.auth.genericLoginType}
         requireEmailConfirmation={siteConfig.auth.requireEmailConfirmation}
+        disableRegistration={siteConfig.auth.disableRegistration}
       />
     </Suspense>
   )

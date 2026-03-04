@@ -16,6 +16,7 @@ import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { siteConfig } from '@/config'
 import { useNotifications } from '@/hooks/use-notifications'
+import { usePermissionChecker } from '@/hooks/use-permission'
 import { useOrganizations } from '@/components/providers/organization-provider'
 import type { NotificationAction } from '@/lib/notifications'
 import { Button } from '@/components/ui/button'
@@ -50,51 +51,170 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useSettings } from '@/components/settings'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet'
 import { useSidebar } from './shell-context'
 
 const SIDEBAR_WIDTH = 240
 
 const ShellSidebar = ({ children }: { children: React.ReactNode }) => {
-  const { isPanelOpen } = useSidebar()
+  const { isPanelOpen, isMobileSidebarOpen, setMobileSidebarOpen } = useSidebar()
   const utilities = siteConfig.dashboard.sidebar.utilities
 
+  const handleMobileNavigationCapture = React.useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      const target = event.target as HTMLElement
+      if (target.closest('a[href]')) {
+        setMobileSidebarOpen(false)
+      }
+    },
+    [setMobileSidebarOpen]
+  )
+
   return (
-    <aside
-      className="sticky top-0 z-40 hidden h-screen transition-[width] duration-300 md:block"
-      style={{ width: isPanelOpen ? SIDEBAR_WIDTH : 0 }}
-      data-panel-state={isPanelOpen ? 'expanded' : 'collapsed'}
-    >
-      <div
-        className={cn(
-          'relative size-full overflow-hidden py-2 transition-all duration-300',
-          isPanelOpen
-            ? 'scale-100 opacity-100 translate-x-0 blur-none'
-            : 'origin-left scale-95 opacity-0 translate-x-6 blur-sm',
-        )}
+    <>
+      <aside
+        className="sticky top-0 z-40 hidden h-dvh transition-[width] duration-300 md:block"
+        style={{ width: isPanelOpen ? SIDEBAR_WIDTH : 0 }}
+        data-panel-state={isPanelOpen ? 'expanded' : 'collapsed'}
       >
         <div
-          className="relative flex h-full flex-col overflow-hidden rounded-l-xl bg-[var(--shell-panel)]"
-          style={{ width: SIDEBAR_WIDTH }}
+          className={cn(
+            'relative size-full overflow-hidden py-2 transition-all duration-300',
+            isPanelOpen
+              ? 'scale-100 opacity-100 translate-x-0 blur-none'
+              : 'origin-left scale-95 opacity-0 translate-x-6 blur-sm',
+          )}
         >
-          <div className="shrink-0 p-3">
-            <div className="mb-2 flex items-center gap-2">
-              <OrganizationSwitcher />
-              <NotificationBell />
+          <div
+            className="relative flex h-full flex-col overflow-hidden rounded-l-xl bg-[var(--shell-panel)]"
+            style={{ width: SIDEBAR_WIDTH }}
+          >
+            <div className="shrink-0 p-3">
+              <div className="mb-2 flex items-center gap-2">
+                <OrganizationSwitcher />
+                <NotificationBell />
+              </div>
+            </div>
+
+            <ScrollArea className="min-h-0 flex-1">
+              <div className="flex flex-col gap-5 px-3 pb-3">{children}</div>
+            </ScrollArea>
+
+            {utilities.length > 0 && (
+              <div className="shrink-0 border-t border-border/50 px-3 pt-1 pb-3">
+                <SidebarUtilities />
+              </div>
+            )}
+          </div>
+        </div>
+      </aside>
+
+      <Sheet open={isMobileSidebarOpen} onOpenChange={setMobileSidebarOpen}>
+        <SheetContent
+          side="left"
+          className="w-[min(86vw,400px)] gap-0 border-r-0 bg-transparent p-0 shadow-none md:hidden"
+          showCloseButton={false}
+        >
+          <SheetTitle className="sr-only">Dashboard navigation</SheetTitle>
+          <div className="flex h-full min-h-0">
+            <div
+              className="flex h-full w-[4.5rem] shrink-0 flex-col items-center border-r border-black/5 px-2 py-3"
+              style={{
+                background: 'color-mix(in oklch, var(--background) 88%, var(--foreground) 8%)',
+              }}
+            >
+              <Link
+                href="/"
+                onClick={() => setMobileSidebarOpen(false)}
+                className="flex items-center justify-center rounded-lg transition-opacity outline-none hover:opacity-80 focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <div className="flex size-9 items-center justify-center rounded-xl bg-primary">
+                  <img
+                    src={siteConfig.logo.icon}
+                    alt={siteConfig.name}
+                    className="size-5 invert dark:invert-0"
+                  />
+                </div>
+              </Link>
+              <MobileRailNavigation onNavigate={() => setMobileSidebarOpen(false)} />
+            </div>
+
+            <div
+              className="flex h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-r-[1.7rem]"
+              style={{
+                background: 'color-mix(in oklch, var(--background) 94%, var(--foreground) 4%)',
+              }}
+            >
+              <div className="shrink-0 border-b border-black/5 p-3">
+                <div className="flex items-center gap-2">
+                  <OrganizationSwitcher onNavigate={() => setMobileSidebarOpen(false)} />
+                  <NotificationBell />
+                </div>
+              </div>
+
+              <ScrollArea className="min-h-0 flex-1">
+                <div
+                  className="flex flex-col gap-5 px-3 py-3"
+                  onClickCapture={handleMobileNavigationCapture}
+                >
+                  {children}
+                </div>
+              </ScrollArea>
+
+              {utilities.length > 0 && (
+                <div
+                  className="shrink-0 border-t border-black/5 px-3 pt-1 pb-3"
+                  onClickCapture={handleMobileNavigationCapture}
+                >
+                  <SidebarUtilities />
+                </div>
+              )}
             </div>
           </div>
+        </SheetContent>
+      </Sheet>
+    </>
+  )
+}
 
-          <ScrollArea className="min-h-0 flex-1">
-            <div className="flex flex-col gap-5 px-3 pb-3">{children}</div>
-          </ScrollArea>
+const MobileRailNavigation = ({ onNavigate }: { onNavigate: () => void }) => {
+  const pathname = usePathname()
+  const hasPermission = usePermissionChecker()
+  const items = siteConfig.dashboard.sidebar.items.filter((item) =>
+    item.visible ? hasPermission(item.visible) : true
+  )
 
-          {utilities.length > 0 && (
-            <div className="shrink-0 border-t border-border/50 px-3 pt-1 pb-3">
-              <SidebarUtilities />
-            </div>
-          )}
-        </div>
-      </div>
-    </aside>
+  return (
+    <nav className="mt-4 flex min-h-0 flex-1 flex-col items-center gap-2 overflow-y-auto">
+      {items.map((item) => {
+        const isActive =
+          item.href === '/'
+            ? pathname === '/'
+            : pathname.startsWith(item.href)
+
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            onClick={onNavigate}
+            className={cn(
+              'flex size-11 items-center justify-center rounded-2xl transition-colors duration-75 outline-none focus-visible:ring-2 focus-visible:ring-ring',
+              isActive
+                ? 'bg-background text-foreground'
+                : 'text-muted-foreground hover:bg-accent active:bg-accent/80',
+            )}
+            aria-label={item.title}
+          >
+            <HugeiconsIcon
+              icon={item.icon}
+              size={20}
+              className={cn('shrink-0', isActive ? 'text-foreground' : 'text-muted-foreground')}
+            />
+            <span className="sr-only">{item.title}</span>
+          </Link>
+        )
+      })}
+    </nav>
   )
 }
 
@@ -130,7 +250,7 @@ const SidebarUtilities = () => {
   )
 }
 
-const OrganizationSwitcher = () => {
+const OrganizationSwitcher = ({ onNavigate }: { onNavigate?: () => void }) => {
   const { openOrganization } = useSettings()
   const {
     organizations,
@@ -153,6 +273,7 @@ const OrganizationSwitcher = () => {
     }
 
     toast.success('Organization switched')
+    onNavigate?.()
   }
 
   const handleCreateOrganization = async () => {
@@ -221,7 +342,12 @@ const OrganizationSwitcher = () => {
             <HugeiconsIcon icon={PlusSignIcon} size={16} className="mr-2" />
             Create organization
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => openOrganization('organization-general')}>
+          <DropdownMenuItem
+            onClick={() => {
+              openOrganization('organization-general')
+              onNavigate?.()
+            }}
+          >
             <HugeiconsIcon icon={UserSettingsIcon} size={16} className="mr-2" />
             Organization settings
           </DropdownMenuItem>

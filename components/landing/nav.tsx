@@ -25,7 +25,9 @@ const Nav = ({ className }: NavProps) => {
   const { status } = useSession()
   const isAuthenticated = status === 'authenticated'
   const getStartedHref =
-    siteConfig.auth.genericLoginType === 'emailAndPassword' ? '/register' : '/login'
+    siteConfig.auth.genericLoginType === 'emailAndPassword' && !siteConfig.auth.disableRegistration
+      ? '/register'
+      : '/login'
 
   return (
     <header

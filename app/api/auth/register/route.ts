@@ -13,9 +13,12 @@ export const POST = async (req: Request) => {
   try {
     const { name, email, password } = await req.json()
 
-    if (siteConfig.auth.genericLoginType !== "emailAndPassword") {
+    if (
+      siteConfig.auth.genericLoginType !== "emailAndPassword" ||
+      siteConfig.auth.disableRegistration
+    ) {
       return NextResponse.json(
-        { error: "Email and password registration is disabled" },
+        { error: "Registration is disabled" },
         { status: 400 }
       )
     }

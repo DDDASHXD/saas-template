@@ -9,6 +9,7 @@ import type { IconSvgElement } from "@hugeicons/react"
 import type { PermissionId } from "@/permissions"
 import { usePermissionChecker } from "@/hooks/use-permission"
 import { cn } from "@/lib/utils"
+import { useSidebar } from "./shell-context"
 
 interface ShellSidebarItemProps {
   icon: IconSvgElement
@@ -20,6 +21,7 @@ interface ShellSidebarItemProps {
 const ShellSidebarItem = ({ icon, href, visible, children }: ShellSidebarItemProps) => {
   const pathname = usePathname()
   const hasPermission = usePermissionChecker()
+  const { setMobileSidebarOpen } = useSidebar()
   const isActive = pathname === href
 
   if (visible && !hasPermission(visible)) {
@@ -29,6 +31,7 @@ const ShellSidebarItem = ({ icon, href, visible, children }: ShellSidebarItemPro
   return (
     <Link
       href={href}
+      onClick={() => setMobileSidebarOpen(false)}
       className={cn(
         "group flex h-8 items-center gap-2.5 rounded-lg px-3 text-sm leading-none transition-[background-color,color,font-weight] duration-75",
         isActive

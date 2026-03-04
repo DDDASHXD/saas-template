@@ -4,7 +4,7 @@ import * as React from "react"
 import Link from "next/link"
 import { signOut } from "next-auth/react"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { Logout03Icon, UserGroupIcon } from "@hugeicons/core-free-icons"
+import { Logout03Icon, Menu01Icon, UserGroupIcon } from "@hugeicons/core-free-icons"
 
 import { siteConfig } from "@/config"
 import { OrganizationProvider } from "@/components/providers/organization-provider"
@@ -22,7 +22,7 @@ import { Separator } from "@/components/ui/separator"
 import { SettingsProvider, SettingsModal, useSettings } from "@/components/settings"
 import { useUser } from "@/hooks/use-user"
 import type { InitialOrganizationData } from "@/lib/organizations"
-import { SidebarProvider } from "./shell-context"
+import { SidebarProvider, useSidebar } from "./shell-context"
 import { ShellRail } from "./shell-rail"
 
 const Shell = ({
@@ -37,7 +37,7 @@ const Shell = ({
       <OrganizationProvider initialData={initialOrganizationData}>
         <SidebarProvider>
           <div
-            className="flex h-screen flex-col overflow-hidden bg-[var(--shell-chrome)]"
+            className="flex min-h-dvh flex-col overflow-hidden bg-[var(--shell-chrome)]"
             style={
               {
                 "--shell-panel":
@@ -47,7 +47,12 @@ const Shell = ({
               } as React.CSSProperties
             }
           >
-            <header className="flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4 md:hidden">
+            <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4 md:hidden">
+              <MobileSidebarButton />
+              <Separator
+                orientation="vertical"
+                className="data-[orientation=vertical]:h-4"
+              />
               <Link href="/" className="flex items-center gap-2">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-sm bg-primary">
                   <img
@@ -61,7 +66,7 @@ const Shell = ({
                 orientation="vertical"
                 className="data-[orientation=vertical]:h-4"
               />
-              <div className="shrink-0 text-sm font-medium">
+              <div className="min-w-0 shrink text-sm font-medium truncate">
                 {siteConfig.name}
               </div>
               <div className="ml-auto">
@@ -137,6 +142,20 @@ const MobileUserMenu = () => {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
+  )
+}
+
+const MobileSidebarButton = () => {
+  const { toggleMobileSidebar } = useSidebar()
+
+  return (
+    <button
+      className="flex size-8 items-center justify-center rounded-lg outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
+      aria-label="Open navigation"
+      onClick={toggleMobileSidebar}
+    >
+      <HugeiconsIcon icon={Menu01Icon} size={18} />
+    </button>
   )
 }
 

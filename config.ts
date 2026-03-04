@@ -29,6 +29,7 @@ export const siteConfig: SiteConfig = {
   auth: {
     requireEmailConfirmation: true,
     genericLoginType: 'emailOTP',
+    disableRegistration: true,
   },
 
   logo: {

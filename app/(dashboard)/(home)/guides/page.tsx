@@ -43,7 +43,7 @@ const GuidesPage = () => {
               key={guide.title}
               className="rounded-xl border border-border/70 bg-[var(--shell-panel)] p-5"
             >
-              <div className="flex items-center justify-between gap-4">
+              <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                 <h3 className="text-base font-semibold">{guide.title}</h3>
                 <p className="text-xs text-muted-foreground">{guide.duration}</p>
               </div>

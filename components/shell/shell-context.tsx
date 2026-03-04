@@ -9,6 +9,9 @@ interface SidebarContextValue {
   setPanelOpen: (open: boolean) => void
   togglePanel: () => void
   panelState: "expanded" | "collapsed"
+  isMobileSidebarOpen: boolean
+  setMobileSidebarOpen: (open: boolean) => void
+  toggleMobileSidebar: () => void
 }
 
 const SidebarContext = React.createContext<SidebarContextValue | null>(null)
@@ -31,14 +34,23 @@ const SidebarProvider = ({
   children,
 }: SidebarProviderProps) => {
   const [isPanelOpen, setIsPanelOpen] = React.useState(defaultOpen)
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = React.useState(false)
 
   const setPanelOpen = React.useCallback((open: boolean) => {
     setIsPanelOpen(open)
   }, [])
 
   const togglePanel = React.useCallback(() => {
-    setPanelOpen(!isPanelOpen)
-  }, [isPanelOpen, setPanelOpen])
+    setIsPanelOpen((current) => !current)
+  }, [])
+
+  const setMobileSidebarOpen = React.useCallback((open: boolean) => {
+    setIsMobileSidebarOpen(open)
+  }, [])
+
+  const toggleMobileSidebar = React.useCallback(() => {
+    setIsMobileSidebarOpen((current) => !current)
+  }, [])
 
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -58,8 +70,24 @@ const SidebarProvider = ({
   const panelState = isPanelOpen ? "expanded" : "collapsed"
 
   const value = React.useMemo<SidebarContextValue>(
-    () => ({ isPanelOpen, setPanelOpen, togglePanel, panelState }),
-    [isPanelOpen, setPanelOpen, togglePanel, panelState],
+    () => ({
+      isPanelOpen,
+      setPanelOpen,
+      togglePanel,
+      panelState,
+      isMobileSidebarOpen,
+      setMobileSidebarOpen,
+      toggleMobileSidebar,
+    }),
+    [
+      isPanelOpen,
+      setPanelOpen,
+      togglePanel,
+      panelState,
+      isMobileSidebarOpen,
+      setMobileSidebarOpen,
+      toggleMobileSidebar,
+    ],
   )
 
   return (

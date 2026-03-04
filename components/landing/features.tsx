@@ -183,7 +183,9 @@ interface FeaturesCarouselProps {
 
 const FeaturesCarousel = ({ className }: FeaturesCarouselProps) => {
   const getStartedHref =
-    siteConfig.auth.genericLoginType === 'emailAndPassword' ? '/register' : '/login'
+    siteConfig.auth.genericLoginType === 'emailAndPassword' && !siteConfig.auth.disableRegistration
+      ? '/register'
+      : '/login'
 
   return (
     <section className={cn('py-32', className)}>

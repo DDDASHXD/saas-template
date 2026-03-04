@@ -30,7 +30,7 @@ const AppearancePage = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           {themes.map((t) => (
             <button
               key={t.id}

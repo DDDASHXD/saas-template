@@ -59,7 +59,7 @@ const MessageBubble = ({
   const isUser = message.role === 'user'
 
   return (
-    <div className={cn('flex gap-3 max-w-2xl', isUser && 'ml-auto flex-row-reverse')}>
+    <div className={cn('flex w-full max-w-full gap-3 sm:max-w-2xl', isUser && 'ml-auto flex-row-reverse')}>
       {isUser ? (
         <Avatar className="size-7 shrink-0 mt-0.5">
           <AvatarImage src={userImage} alt={userName} />
@@ -72,7 +72,7 @@ const MessageBubble = ({
       )}
       <div
         className={cn(
-          'rounded-xl px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap',
+          'rounded-xl px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap break-words',
           isUser
             ? 'bg-primary text-primary-foreground'
             : 'bg-muted text-foreground'
@@ -95,7 +95,7 @@ const MessagesPage = () => {
         <ShellContentHeaderDescription>Chat with your AI assistant</ShellContentHeaderDescription>
       </ShellContentHeader>
       <ShellBody>
-        <div className="w-full h-full flex-1 flex flex-col">
+        <div className="flex h-full w-full min-w-0 flex-1 flex-col">
           <div className="flex-1 overflow-y-auto">
             <div className="mx-auto flex w-full max-w-3xl flex-col gap-5 py-4">
               {exampleMessages.map((message) => (
@@ -109,10 +109,10 @@ const MessagesPage = () => {
               ))}
             </div>
           </div>
-          <div className="border p-2 rounded-xl mx-auto w-full max-w-2xl h-max">
+          <div className="mx-auto h-max w-full max-w-2xl rounded-xl border p-2">
             <div className="h-20 p-2">
               <textarea
-                className="resize-none focus:outline-none w-full h-full text-sm"
+                className="h-full w-full resize-none bg-transparent text-sm focus:outline-none"
                 placeholder="Ask anything..."
                 value={content}
                 onChange={(e) => setContent(e.target.value)}

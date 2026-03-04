@@ -42,19 +42,19 @@ const ConnectionsPage = () => {
         {connections.map((connection, i) => (
           <div
             key={connection.name}
-            className={`flex items-center justify-between border p-3 ${
+            className={`flex flex-col items-start gap-3 border p-3 sm:flex-row sm:items-center sm:justify-between ${
               i === 0 ? "rounded-t-lg" : ""
             } ${
               i === connections.length - 1 ? "rounded-b-lg" : "border-b-0"
             }`}
           >
-            <div className="flex items-center gap-3">
+            <div className="flex min-w-0 items-center gap-3">
               <div className="flex size-9 items-center justify-center rounded-lg bg-muted text-xs font-bold">
                 {connection.name[0]}
               </div>
-              <div>
+              <div className="min-w-0">
                 <p className="text-sm font-medium">{connection.name}</p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground break-words">
                   {connection.description}
                 </p>
               </div>

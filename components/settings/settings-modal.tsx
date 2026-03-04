@@ -67,6 +67,10 @@ const SettingsModal = () => {
   const { name, email, image, initials } = useUser()
   const { currentOrganization } = useOrganizations()
   const sections = scope === 'organization' ? organizationSections : siteConfig.dashboard.settings
+  const mobileItems = React.useMemo(
+    () => sections.flatMap((section) => section.items),
+    [sections]
+  )
   const title = getPageTitle({ pageId: activePage, scope })
 
   return (
@@ -177,6 +181,28 @@ const SettingsModal = () => {
                   >
                     <HugeiconsIcon icon={Cancel01Icon} size={16} strokeWidth={2} />
                   </DialogPrimitive.Close>
+                </div>
+
+                <div className="border-b p-3 sm:hidden">
+                  <div className="flex gap-1 overflow-x-auto">
+                    {mobileItems.map((item) => {
+                      const isActive = activePage === item.id
+                      return (
+                        <button
+                          key={item.id}
+                          onClick={() => setActivePage(item.id)}
+                          className={cn(
+                            'shrink-0 rounded-md px-2.5 py-1.5 text-xs transition-colors',
+                            isActive
+                              ? 'bg-primary/10 font-medium text-primary'
+                              : 'text-muted-foreground hover:bg-muted',
+                          )}
+                        >
+                          {item.label}
+                        </button>
+                      )
+                    })}
+                  </div>
                 </div>
 
                 <ScrollArea className="min-h-0 flex-1">

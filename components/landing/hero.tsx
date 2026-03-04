@@ -18,7 +18,9 @@ interface HeroProps {
 
 const Hero = ({ className }: HeroProps) => {
   const getStartedHref =
-    siteConfig.auth.genericLoginType === 'emailAndPassword' ? '/register' : '/login'
+    siteConfig.auth.genericLoginType === 'emailAndPassword' && !siteConfig.auth.disableRegistration
+      ? '/register'
+      : '/login'
 
   return (
     <section className={cn('py-32', className)}>

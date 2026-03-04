@@ -19,6 +19,7 @@ interface LoginFormProps {
   enabledProviders: string[]
   genericLoginType: GenericLoginType
   requireEmailConfirmation: boolean
+  disableRegistration: boolean
 }
 
 const providerConfig: Record<string, { label: string; icon: React.ReactNode }> = {
@@ -68,6 +69,7 @@ const LoginForm = ({
   enabledProviders,
   genericLoginType,
   requireEmailConfirmation,
+  disableRegistration,
 }: LoginFormProps) => {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -408,7 +410,7 @@ const LoginForm = ({
         </p>
       )}
 
-      {genericLoginType === 'emailAndPassword' && (
+      {genericLoginType === 'emailAndPassword' && !disableRegistration && (
         <div className="flex justify-center gap-1 text-sm text-muted-foreground">
           <p>Don&apos;t have an account?</p>
           <Link href={`/register${callbackQuery}`} className="font-medium text-primary hover:underline">
@@ -417,7 +419,7 @@ const LoginForm = ({
         </div>
       )}
 
-      {genericLoginType === 'emailOTP' && (
+      {genericLoginType === 'emailOTP' && !disableRegistration && (
         <p className="text-center text-sm text-muted-foreground">
           Your account is created automatically after successful email verification.
         </p>

@@ -48,7 +48,7 @@ const NotificationsPage = () => {
         </div>
 
         <div className="flex flex-col gap-0">
-          <div className="flex items-center justify-between rounded-t-lg border p-3">
+          <div className="flex items-start justify-between gap-3 rounded-t-lg border p-3">
             <div>
               <p className="text-sm font-medium">Email notifications</p>
               <p className="text-xs text-muted-foreground">
@@ -57,7 +57,7 @@ const NotificationsPage = () => {
             </div>
             <Toggle enabled={email} onToggle={() => setEmail(!email)} />
           </div>
-          <div className="flex items-center justify-between border-x border-b p-3">
+          <div className="flex items-start justify-between gap-3 border-x border-b p-3">
             <div>
               <p className="text-sm font-medium">Push notifications</p>
               <p className="text-xs text-muted-foreground">
@@ -66,7 +66,7 @@ const NotificationsPage = () => {
             </div>
             <Toggle enabled={push} onToggle={() => setPush(!push)} />
           </div>
-          <div className="flex items-center justify-between border-x border-b p-3">
+          <div className="flex items-start justify-between gap-3 border-x border-b p-3">
             <div>
               <p className="text-sm font-medium">Marketing emails</p>
               <p className="text-xs text-muted-foreground">
@@ -75,7 +75,7 @@ const NotificationsPage = () => {
             </div>
             <Toggle enabled={marketing} onToggle={() => setMarketing(!marketing)} />
           </div>
-          <div className="flex items-center justify-between rounded-b-lg border-x border-b p-3">
+          <div className="flex items-start justify-between gap-3 rounded-b-lg border-x border-b p-3">
             <div>
               <p className="text-sm font-medium">Security alerts</p>
               <p className="text-xs text-muted-foreground">
@@ -96,7 +96,7 @@ const NotificationsPage = () => {
             Set times when you don&apos;t want to receive notifications.
           </p>
         </div>
-        <div className="flex items-center gap-3 text-sm">
+        <div className="flex flex-wrap items-center gap-3 text-sm">
           <span className="text-muted-foreground">From</span>
           <input
             type="time"
