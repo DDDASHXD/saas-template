@@ -98,6 +98,8 @@ const LoginForm = ({
       ? 'Confirmation link is invalid or expired.'
       : queryError === 'confirmation_failed'
         ? 'Could not confirm email. Please request a new confirmation email.'
+        : queryError === 'registration_disabled'
+          ? 'Sorry, registration is currently disabled.'
         : ''
 
   const handlePasswordSignIn = async () => {

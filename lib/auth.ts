@@ -216,4 +216,39 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   ...authConfig,
   adapter,
   providers,
+  callbacks: {
+    ...authConfig.callbacks,
+    async signIn(params) {
+      if (!siteConfig.auth.disableRegistration) {
+        return true
+      }
+
+      const { account, user } = params
+      if (!account || (account.type !== "oauth" && account.type !== "oidc")) {
+        return true
+      }
+
+      const db = await getDb()
+      const existingAccount = await db.collection("accounts").findOne({
+        provider: account.provider,
+        providerAccountId: account.providerAccountId,
+      })
+
+      if (existingAccount) {
+        return true
+      }
+
+      const email = typeof user.email === "string" ? normalizeEmail(user.email) : ""
+      if (!email) {
+        return "/login?error=registration_disabled"
+      }
+
+      const existingUser = await db.collection("users").findOne({ email })
+      if (!existingUser) {
+        return "/login?error=registration_disabled"
+      }
+
+      return true
+    },
+  },
 })
