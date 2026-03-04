@@ -34,12 +34,17 @@ import {
 } from "@/components/ui/tooltip"
 import { useSettings } from "@/components/settings"
 import { useUser } from "@/hooks/use-user"
+import { usePermissionChecker } from "@/hooks/use-permission"
 import { useSidebar } from "./shell-context"
 
 const ShellRail = () => {
   const pathname = usePathname()
   const { isPanelOpen, togglePanel } = useSidebar()
   const items = siteConfig.dashboard.sidebar.items
+  const hasPermission = usePermissionChecker()
+  const visibleItems = items.filter((item) =>
+    item.visible ? hasPermission(item.visible) : true
+  )
 
   return (
     <TooltipProvider>
@@ -61,7 +66,7 @@ const ShellRail = () => {
           </div>
 
           <div className="flex flex-col items-center gap-3">
-            {items.map((item) => {
+            {visibleItems.map((item) => {
               const isActive =
                 item.href === "/"
                   ? pathname === "/"

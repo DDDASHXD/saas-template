@@ -21,13 +21,20 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { SettingsProvider, SettingsModal, useSettings } from "@/components/settings"
 import { useUser } from "@/hooks/use-user"
+import type { InitialOrganizationData } from "@/lib/organizations"
 import { SidebarProvider } from "./shell-context"
 import { ShellRail } from "./shell-rail"
 
-const Shell = ({ children }: { children: React.ReactNode }) => {
+const Shell = ({
+  children,
+  initialOrganizationData,
+}: {
+  children: React.ReactNode
+  initialOrganizationData?: InitialOrganizationData | null
+}) => {
   return (
     <SettingsProvider>
-      <OrganizationProvider>
+      <OrganizationProvider initialData={initialOrganizationData}>
         <SidebarProvider>
           <div
             className="flex h-screen flex-col overflow-hidden bg-[var(--shell-chrome)]"

@@ -12,10 +12,13 @@ import {
   ShellSidebarGroup,
   ShellSidebarItem,
 } from '@/components/shell'
+import { getInitialOrganizationData } from '@/lib/organization-server'
 
-const PagesLayout = ({ children }: { children: React.ReactNode }) => {
+const PagesLayout = async ({ children }: { children: React.ReactNode }) => {
+  const initialOrganizationData = await getInitialOrganizationData()
+
   return (
-    <Shell>
+    <Shell initialOrganizationData={initialOrganizationData}>
       <ShellSidebar>
         <ShellSidebarGroup>
           <ShellSidebarItem icon={File02Icon} href="/pages">

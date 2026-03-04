@@ -51,6 +51,11 @@ export interface CurrentOrganizationState {
   invitations: OrganizationInvitationView[]
 }
 
+export interface InitialOrganizationData {
+  organizations: UserOrganization[]
+  current: CurrentOrganizationState
+}
+
 interface OrganizationDocument {
   _id?: ObjectId
   name: string

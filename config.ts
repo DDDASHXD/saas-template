@@ -85,7 +85,14 @@ export const siteConfig: SiteConfig = {
         { title: 'Home', href: '/overview', icon: Home01Icon, type: 'default' },
         { title: 'Projects', href: '/projects', icon: DocumentAttachmentIcon, type: 'default' },
         { title: 'Pages', href: '/pages', icon: File02Icon, type: 'default' },
-        { title: 'Permission Routes', href: '/permission-routes', icon: KeyIcon, type: 'default' },
+        {
+          title: 'Permission Routes',
+          href: '/permission-routes',
+          icon: KeyIcon,
+          type: 'default',
+          visible: 'organization.manage',
+        },
+        { title: 'Test Route', href: '/test-route', icon: KeyIcon, type: 'default' },
         { title: 'Permissions Lab', href: '/permissions-lab', icon: KeyIcon, type: 'default' },
         {
           title: 'Docs',

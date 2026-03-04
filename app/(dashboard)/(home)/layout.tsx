@@ -19,10 +19,13 @@ import {
   ShellSidebarGroup,
   ShellSidebarItem,
 } from '@/components/shell'
+import { getInitialOrganizationData } from '@/lib/organization-server'
 
-const HomeLayout = ({ children }: { children: React.ReactNode }) => {
+const HomeLayout = async ({ children }: { children: React.ReactNode }) => {
+  const initialOrganizationData = await getInitialOrganizationData()
+
   return (
-    <Shell>
+    <Shell initialOrganizationData={initialOrganizationData}>
       <ShellSidebar>
         <ShellSidebarButton icon={Add01Icon} variant="default">
           New
@@ -40,8 +43,11 @@ const HomeLayout = ({ children }: { children: React.ReactNode }) => {
           <ShellSidebarItem icon={InformationCircleIcon} href="/documentation">
             Documentation
           </ShellSidebarItem>
-          <ShellSidebarItem icon={KeyIcon} href="/permission-routes">
+          <ShellSidebarItem icon={KeyIcon} href="/permission-routes" visible="organization.manage">
             Permission Routes
+          </ShellSidebarItem>
+          <ShellSidebarItem icon={KeyIcon} href="/test-route">
+            Test Route
           </ShellSidebarItem>
         </ShellSidebarGroup>
         <ShellSidebarGroup label="Workspace">

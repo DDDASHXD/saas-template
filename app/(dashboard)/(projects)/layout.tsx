@@ -13,10 +13,13 @@ import {
   ShellSidebarGroup,
   ShellSidebarItem,
 } from "@/components/shell"
+import { getInitialOrganizationData } from "@/lib/organization-server"
 
-const ProjectsLayout = ({ children }: { children: React.ReactNode }) => {
+const ProjectsLayout = async ({ children }: { children: React.ReactNode }) => {
+  const initialOrganizationData = await getInitialOrganizationData()
+
   return (
-    <Shell>
+    <Shell initialOrganizationData={initialOrganizationData}>
       <ShellSidebar>
         <ShellSidebarButton icon={Add01Icon} variant="default">
           New Project

@@ -3,20 +3,14 @@
 import * as React from "react"
 
 import type {
+  CurrentOrganizationState,
+  InitialOrganizationData,
   OrganizationInvitationView,
   OrganizationMember,
   OrganizationRole,
   OrganizationSummary,
   UserOrganization,
 } from "@/lib/organizations"
-
-interface CurrentOrganizationResponse {
-  organization: OrganizationSummary
-  role: OrganizationRole
-  isHomeForCurrentUser: boolean
-  members: OrganizationMember[]
-  invitations: OrganizationInvitationView[]
-}
 
 interface InvitationMutationResponse {
   role: OrganizationRole
@@ -89,18 +83,37 @@ const useOrganizations = () => {
   return context
 }
 
-const OrganizationProvider = ({ children }: { children: React.ReactNode }) => {
-  const [organizations, setOrganizations] = React.useState<UserOrganization[]>([])
-  const [currentOrganization, setCurrentOrganization] = React.useState<OrganizationSummary | null>(null)
-  const [currentRole, setCurrentRole] = React.useState<OrganizationRole | null>(null)
-  const [isCurrentOrganizationHome, setIsCurrentOrganizationHome] = React.useState(false)
-  const [members, setMembers] = React.useState<OrganizationMember[]>([])
-  const [invitations, setInvitations] = React.useState<OrganizationInvitationView[]>([])
-  const [isLoading, setIsLoading] = React.useState(true)
+const OrganizationProvider = ({
+  children,
+  initialData,
+}: {
+  children: React.ReactNode
+  initialData?: InitialOrganizationData | null
+}) => {
+  const hasInitialData = Boolean(initialData)
+  const [organizations, setOrganizations] = React.useState<UserOrganization[]>(
+    initialData?.organizations ?? []
+  )
+  const [currentOrganization, setCurrentOrganization] = React.useState<OrganizationSummary | null>(
+    initialData?.current.organization ?? null
+  )
+  const [currentRole, setCurrentRole] = React.useState<OrganizationRole | null>(
+    initialData?.current.role ?? null
+  )
+  const [isCurrentOrganizationHome, setIsCurrentOrganizationHome] = React.useState(
+    initialData?.current.isHomeForCurrentUser ?? false
+  )
+  const [members, setMembers] = React.useState<OrganizationMember[]>(
+    initialData?.current.members ?? []
+  )
+  const [invitations, setInvitations] = React.useState<OrganizationInvitationView[]>(
+    initialData?.current.invitations ?? []
+  )
+  const [isLoading, setIsLoading] = React.useState(!hasInitialData)
   const [isMutating, setIsMutating] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
 
-  const applyCurrentOrganization = React.useCallback((payload: CurrentOrganizationResponse) => {
+  const applyCurrentOrganization = React.useCallback((payload: CurrentOrganizationState) => {
     setCurrentOrganization(payload.organization)
     setCurrentRole(payload.role)
     setIsCurrentOrganizationHome(payload.isHomeForCurrentUser)
@@ -123,7 +136,7 @@ const OrganizationProvider = ({ children }: { children: React.ReactNode }) => {
         currentOrganizationId: string | null
       }>(listResponse)
 
-      const currentData = await parseJsonResponse<CurrentOrganizationResponse>(currentResponse)
+      const currentData = await parseJsonResponse<CurrentOrganizationState>(currentResponse)
 
       setOrganizations(listData.organizations)
       applyCurrentOrganization(currentData)
@@ -135,8 +148,12 @@ const OrganizationProvider = ({ children }: { children: React.ReactNode }) => {
   }, [applyCurrentOrganization])
 
   React.useEffect(() => {
+    if (hasInitialData) {
+      return
+    }
+
     void refresh()
-  }, [refresh])
+  }, [hasInitialData, refresh])
 
   const updateList = React.useCallback(async () => {
     const response = await fetch("/api/organizations", { cache: "no-store" })
@@ -166,7 +183,7 @@ const OrganizationProvider = ({ children }: { children: React.ReactNode }) => {
         setOrganizations(data.organizations)
 
         const currentResponse = await fetch("/api/organizations/current", { cache: "no-store" })
-        const currentData = await parseJsonResponse<CurrentOrganizationResponse>(currentResponse)
+        const currentData = await parseJsonResponse<CurrentOrganizationState>(currentResponse)
         applyCurrentOrganization(currentData)
 
         return {}
@@ -195,7 +212,7 @@ const OrganizationProvider = ({ children }: { children: React.ReactNode }) => {
           body: JSON.stringify({ organizationId }),
         })
 
-        const data = await parseJsonResponse<CurrentOrganizationResponse>(response)
+        const data = await parseJsonResponse<CurrentOrganizationState>(response)
         applyCurrentOrganization(data)
         await updateList()
 
@@ -226,7 +243,7 @@ const OrganizationProvider = ({ children }: { children: React.ReactNode }) => {
             body: JSON.stringify({ ...(name !== undefined ? { name } : {}), ...(slug !== undefined ? { slug } : {}) }),
           })
 
-          const data = await parseJsonResponse<CurrentOrganizationResponse>(response)
+          const data = await parseJsonResponse<CurrentOrganizationState>(response)
           applyCurrentOrganization(data)
           await updateList()
 

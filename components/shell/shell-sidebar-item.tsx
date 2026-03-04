@@ -6,17 +6,25 @@ import { usePathname } from "next/navigation"
 import { HugeiconsIcon } from "@hugeicons/react"
 import type { IconSvgElement } from "@hugeicons/react"
 
+import type { PermissionId } from "@/permissions"
+import { usePermissionChecker } from "@/hooks/use-permission"
 import { cn } from "@/lib/utils"
 
 interface ShellSidebarItemProps {
   icon: IconSvgElement
   href: string
+  visible?: PermissionId
   children: React.ReactNode
 }
 
-const ShellSidebarItem = ({ icon, href, children }: ShellSidebarItemProps) => {
+const ShellSidebarItem = ({ icon, href, visible, children }: ShellSidebarItemProps) => {
   const pathname = usePathname()
+  const hasPermission = usePermissionChecker()
   const isActive = pathname === href
+
+  if (visible && !hasPermission(visible)) {
+    return null
+  }
 
   return (
     <Link

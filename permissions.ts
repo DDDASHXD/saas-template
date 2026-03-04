@@ -11,6 +11,11 @@ export const permissions = [
     id: 'example.permission',
   },
   {
+    label: 'manage organization',
+    description: 'View and manage organization-restricted navigation and controls',
+    id: 'organization.manage',
+  },
+  {
     label: 'delete organization',
     description: 'delete organization description',
     id: 'organization.delete',

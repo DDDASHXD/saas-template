@@ -5,12 +5,14 @@ import {
   MdxSidebarTree,
 } from "@/components/shell"
 import { getMdxSidebarTree } from "@/lib/mdx-docs"
+import { getInitialOrganizationData } from "@/lib/organization-server"
 
 const DocsLayout = async ({ children }: { children: React.ReactNode }) => {
+  const initialOrganizationData = await getInitialOrganizationData()
   const nodes = await getMdxSidebarTree("/docs")
 
   return (
-    <Shell>
+    <Shell initialOrganizationData={initialOrganizationData}>
       <ShellSidebar>
         <div className="px-2 pb-1">
           <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">

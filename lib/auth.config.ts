@@ -101,6 +101,7 @@ export default {
         "/messages",
         "/guides",
         "/resources",
+        "/test-route",
         "/projects",
         "/pages",
         "/permission-routes",

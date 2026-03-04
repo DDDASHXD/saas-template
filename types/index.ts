@@ -1,4 +1,5 @@
 import type { IconSvgElement } from "@hugeicons/react"
+import type { PermissionId } from "@/permissions"
 
 export type GenericLoginType = "emailAndPassword" | "emailOTP" | "none"
 
@@ -21,6 +22,7 @@ export interface SidebarItem {
   title: string
   href: string
   icon: IconSvgElement
+  visible?: PermissionId
 }
 
 export type DashboardRailItemType = "default" | "mdx"
