@@ -1,5 +1,8 @@
 # SaaS Template
 
+This is a very opinionated template that i initially made for myself to get started on prototypes quicker. I released it as a GitHub template, because i thought that others might find it useful.
+it's featuring a full landing / auth / protected dashboard, including email integrations (resend), multi-tenancy, notification system and documentation system. it's made with a bunch of instructions for LLM's to easily prototype with the system.
+
 ## Feature Breakdown
 
 - Marketing site with responsive nav, hero, feature grid/carousel, and footer
@@ -21,6 +24,10 @@
 - Dark mode support via `next-themes`
 - TypeScript strict mode + ESLint core-web-vitals config
 - Prebuilt error experiences (`403`, `404`, `500`) and global error boundary
+
+## Upcoming features
+
+- [ ] User API keys
 
 ## What This Template Is
 
