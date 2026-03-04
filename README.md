@@ -1,6 +1,7 @@
 # SaaS Template
 
 This is a very opinionated template that i initially made for myself to get started on prototypes quicker. I released it as a GitHub template, because i thought that others might find it useful.
+
 it's featuring a full landing / auth / protected dashboard, including email integrations (resend), multi-tenancy, notification system and documentation system. it's made with a bunch of instructions for LLM's to easily prototype with the system.
 
 ## Feature Breakdown
