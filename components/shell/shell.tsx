@@ -19,58 +19,65 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { SettingsProvider, SettingsModal, useSettings } from "@/components/settings"
+import { SearchLauncher, SearchProvider } from "@/components/search"
 import { useUser } from "@/hooks/use-user"
 import type { InitialOrganizationData } from "@/lib/organizations"
+import type { MdxDocsSidebarNode } from "@/types/docs"
 import { SidebarProvider, useSidebar } from "./shell-context"
 import { ShellRail } from "./shell-rail"
 
 const Shell = ({
   children,
   initialOrganizationData,
+  docsNodes = [],
 }: {
   children: React.ReactNode
   initialOrganizationData?: InitialOrganizationData | null
+  docsNodes?: MdxDocsSidebarNode[]
 }) => {
   return (
     <SettingsProvider>
       <OrganizationProvider initialData={initialOrganizationData}>
         <SidebarProvider>
-          <div
-            className="flex min-h-dvh flex-col overflow-hidden bg-[var(--shell-chrome)]"
-            style={
-              {
-                "--shell-panel":
-                  "color-mix(in oklch, var(--background) 94%, var(--foreground))",
-                "--shell-chrome":
-                  "color-mix(in oklch, var(--background) 88%, var(--foreground))",
-              } as React.CSSProperties
-            }
-          >
-            <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4 md:hidden">
-              <MobileSidebarButton />
-              <Link href="/" className="flex items-center gap-2">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-sm bg-primary">
-                  <img
-                    src={siteConfig.logo.icon}
-                    alt={siteConfig.name}
-                    className="size-6 text-primary-foreground invert dark:invert-0"
-                  />
+          <SearchProvider docsNodes={docsNodes}>
+            <div
+              className="flex min-h-dvh flex-col overflow-hidden bg-[var(--shell-chrome)]"
+              style={
+                {
+                  "--shell-panel":
+                    "color-mix(in oklch, var(--background) 94%, var(--foreground))",
+                  "--shell-chrome":
+                    "color-mix(in oklch, var(--background) 88%, var(--foreground))",
+                } as React.CSSProperties
+              }
+            >
+              <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4 md:hidden">
+                <MobileSidebarButton />
+                <Link href="/" className="flex items-center gap-2">
+                  <div className="flex aspect-square size-8 items-center justify-center rounded-sm bg-primary">
+                    <img
+                      src={siteConfig.logo.icon}
+                      alt={siteConfig.name}
+                      className="size-6 text-primary-foreground invert dark:invert-0"
+                    />
+                  </div>
+                </Link>
+                <div className="min-w-0 shrink text-sm font-medium truncate">
+                  {siteConfig.name}
                 </div>
-              </Link>
-              <div className="min-w-0 shrink text-sm font-medium truncate">
-                {siteConfig.name}
-              </div>
-              <div className="ml-auto">
-                <MobileUserMenu />
-              </div>
-            </header>
+                <div className="ml-auto flex items-center gap-1">
+                  <SearchLauncher variant="icon" />
+                  <MobileUserMenu />
+                </div>
+              </header>
 
-            <div className="flex min-h-0 flex-1 md:grid md:grid-cols-[4rem_min-content_minmax(0,1fr)]">
-              <ShellRail />
-              {children}
+              <div className="flex min-h-0 flex-1 md:grid md:grid-cols-[4rem_min-content_minmax(0,1fr)]">
+                <ShellRail />
+                {children}
+              </div>
             </div>
-          </div>
-          <SettingsModal />
+            <SettingsModal />
+          </SearchProvider>
         </SidebarProvider>
       </OrganizationProvider>
     </SettingsProvider>

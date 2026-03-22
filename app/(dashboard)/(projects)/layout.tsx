@@ -13,13 +13,15 @@ import {
   ShellSidebarGroup,
   ShellSidebarItem,
 } from "@/components/shell"
+import { getMdxSidebarTree } from "@/lib/mdx-docs"
 import { getInitialOrganizationData } from "@/lib/organization-server"
 
 const ProjectsLayout = async ({ children }: { children: React.ReactNode }) => {
   const initialOrganizationData = await getInitialOrganizationData()
+  const docsNodes = await getMdxSidebarTree("/docs")
 
   return (
-    <Shell initialOrganizationData={initialOrganizationData}>
+    <Shell initialOrganizationData={initialOrganizationData} docsNodes={docsNodes}>
       <ShellSidebar>
         <ShellSidebarButton icon={Add01Icon} variant="default">
           New Project

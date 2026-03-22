@@ -50,6 +50,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useSettings } from '@/components/settings'
+import { SearchLauncher } from '@/components/search'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet'
 import { useSidebar } from './shell-context'
@@ -94,6 +95,7 @@ const ShellSidebar = ({ children }: { children: React.ReactNode }) => {
                 <OrganizationSwitcher />
                 <NotificationBell />
               </div>
+              <SearchLauncher />
             </div>
 
             <ScrollArea className="min-h-0 flex-1">
@@ -150,6 +152,7 @@ const ShellSidebar = ({ children }: { children: React.ReactNode }) => {
                   <OrganizationSwitcher onNavigate={() => setMobileSidebarOpen(false)} />
                   <NotificationBell />
                 </div>
+                <SearchLauncher className="mt-2" />
               </div>
 
               <ScrollArea className="min-h-0 flex-1">

@@ -33,6 +33,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { useSettings } from "@/components/settings"
+import { SearchLauncher } from "@/components/search"
 import { useUser } from "@/hooks/use-user"
 import { usePermissionChecker } from "@/hooks/use-permission"
 import { useSidebar } from "./shell-context"
@@ -66,6 +67,22 @@ const ShellRail = () => {
           </div>
 
           <div className="flex flex-col items-center gap-3">
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <div className="flex size-11 items-center justify-center" />
+                }
+              >
+                <SearchLauncher variant="icon" className="size-11 rounded-lg" />
+              </TooltipTrigger>
+              <TooltipContent side="right" sideOffset={8}>
+                <span>Search</span>
+                <kbd className="ml-2 rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+                  Cmd K
+                </kbd>
+              </TooltipContent>
+            </Tooltip>
+
             {visibleItems.map((item) => {
               const isActive =
                 item.href === "/"

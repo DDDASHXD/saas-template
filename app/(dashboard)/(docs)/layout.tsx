@@ -12,7 +12,7 @@ const DocsLayout = async ({ children }: { children: React.ReactNode }) => {
   const nodes = await getMdxSidebarTree("/docs")
 
   return (
-    <Shell initialOrganizationData={initialOrganizationData}>
+    <Shell initialOrganizationData={initialOrganizationData} docsNodes={nodes}>
       <ShellSidebar>
         <div className="px-2 pb-1">
           <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
